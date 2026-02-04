@@ -8,13 +8,14 @@ import {
   Route,
   RouterProvider,
 } from "react-router";
-import { Dashboard, Templetes } from "./pages";
+import { Dashboard, NotFound, Templetes } from "./pages";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
       <Route path="/" element={<Dashboard />} />
       <Route path="/templates" element={<Templetes />} />
+      <Route path="*" element={<NotFound />} />
     </Route>,
   ),
 );

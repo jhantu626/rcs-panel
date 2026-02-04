@@ -1,4 +1,6 @@
 import Dashboard from "./Dashboard";
 import Templetes from "./Templetes";
 
-export { Dashboard, Templetes };
+import NotFound from "./NotFound";
+
+export { Dashboard, Templetes, NotFound };
