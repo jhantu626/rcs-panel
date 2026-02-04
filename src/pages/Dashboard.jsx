@@ -9,9 +9,10 @@ import {
 } from "lucide-react";
 import StatCard from "../components/cards/StatCard";
 import AnalyticsChart from "../components/charts/AnalyticsChart";
-import ReminderCard from "../components/cards/ReminderCard";
+import ReminderCard from "../components/cards/ScheduleMeeting";
 import CampaignList from "../components/lists/CampaignList";
 import UserList from "../components/lists/UserList";
+import ScheduleMeeting from "../components/cards/ScheduleMeeting";
 
 const Dashboard = () => {
   return (
@@ -134,7 +135,7 @@ const Dashboard = () => {
           <UserList />
         </div>
         <div className="xl:col-span-1">
-          <ReminderCard />
+          <ScheduleMeeting />
         </div>
       </div>
     </>
