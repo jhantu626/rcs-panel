@@ -14,6 +14,7 @@ import {
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "react-router";
 
 const cn = (...inputs) => twMerge(clsx(inputs));
 
@@ -37,9 +38,9 @@ const Sidebar = () => {
     {
       icon: Share2,
       label: "Channels",
-      path: "/dashboard",
+      path: "/",
       children: [
-        { label: "Dashboard", path: "/dashboard" },
+        { label: "Dashboard", path: "/" },
         { label: "Report", path: "/report" },
       ],
     },
@@ -113,7 +114,8 @@ const Sidebar = () => {
           <nav className="flex flex-col gap-1">
             {menuItems.map((item) => (
               <div key={item.path}>
-                <button
+                <Link
+                  to={item.path}
                   onClick={() => handleItemClick(item)}
                   className={cn(
                     "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group relative",
@@ -148,7 +150,7 @@ const Sidebar = () => {
                   {collapsed && isActive(item.path) && !item.children && (
                     <div className="absolute right-0 top-2 bottom-2 w-1 bg-pink-600 rounded-l-full" />
                   )}
-                </button>
+                </Link>
 
                 {/* Submenu */}
                 <AnimatePresence>
@@ -162,7 +164,8 @@ const Sidebar = () => {
                     >
                       <div className="flex flex-col gap-1 mt-1 pl-12 pr-2 pb-1">
                         {item.children.map((subItem) => (
-                          <button
+                          <Link
+                          to={subItem.path}
                             key={subItem.path}
                             onClick={() => setActivePath(subItem.path)}
                             className={cn(
@@ -173,7 +176,7 @@ const Sidebar = () => {
                             )}
                           >
                             {subItem.label}
-                          </button>
+                          </Link>
                         ))}
                       </div>
                     </motion.div>
