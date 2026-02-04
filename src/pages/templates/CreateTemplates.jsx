@@ -1,14 +1,108 @@
 import React, { useState } from "react";
 import Select from "react-select";
+import { validateName } from "../../utils/validations";
 const options = [
   { value: "chocolate", label: "Chocolate" },
   { value: "strawberry", label: "Strawberry" },
   { value: "vanilla", label: "Vanilla" },
 ];
+const templateTypeOptions = [
+  { value: "standard", label: "Standard Card" },
+  { value: "rich", label: "Rich Media Card" },
+  { value: "carousel", label: "Carousel" },
+];
+
+const customSelectStyles = {
+  control: (base, state) => ({
+    ...base,
+    backgroundColor: "white",
+    borderColor: state.isFocused ? "#3b82f6" : "#e2e8f0",
+    borderRadius: "0.5rem",
+    minHeight: "42px",
+    boxShadow: state.isFocused
+      ? "0 0 0 3px rgba(59, 130, 246, 0.1)"
+      : "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+    "&:hover": {
+      borderColor: "#3b82f6",
+    },
+    cursor: "pointer",
+    transition: "all 0.2s",
+  }),
+  valueContainer: (base) => ({
+    ...base,
+    padding: "0.625rem 1rem", // py-2.5 px-4
+  }),
+  input: (base) => ({
+    ...base,
+    margin: "0",
+    padding: "0",
+    color: "#1e293b",
+    fontSize: "0.875rem", // text-sm
+  }),
+  placeholder: (base) => ({
+    ...base,
+    color: "#94a3b8",
+    fontSize: "0.875rem", // text-sm
+    margin: "0",
+  }),
+  singleValue: (base) => ({
+    ...base,
+    color: "#1e293b",
+    fontSize: "0.875rem", // text-sm
+    margin: "0",
+  }),
+  dropdownIndicator: (base, state) => ({
+    ...base,
+    color: state.isFocused ? "#3b82f6" : "#94a3b8",
+    padding: "0.5rem",
+    "&:hover": {
+      color: "#3b82f6",
+    },
+    transition: "all 0.2s",
+  }),
+  indicatorSeparator: () => ({
+    display: "none",
+  }),
+  menu: (base) => ({
+    ...base,
+    borderRadius: "0.5rem",
+    boxShadow:
+      "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+    border: "1px solid #e2e8f0",
+    overflow: "hidden",
+    marginTop: "0.25rem",
+  }),
+  menuList: (base) => ({
+    ...base,
+    padding: "0.25rem",
+  }),
+  option: (base, state) => ({
+    ...base,
+    backgroundColor: state.isSelected
+      ? "#3b82f6"
+      : state.isFocused
+        ? "#eff6ff"
+        : "white",
+    color: state.isSelected ? "white" : "#1e293b",
+    cursor: "pointer",
+    fontSize: "0.875rem", // text-sm
+    padding: "0.625rem 0.75rem",
+    "&:active": {
+      backgroundColor: "#3b82f6",
+    },
+  }),
+};
 
 const CreateTemplates = () => {
   //STATE VARIABLES
   const [templateName, setTemplateName] = useState("");
+  const [selectedTemplateType, setSelectedTemplateType] = useState(
+    templateTypeOptions[0],
+  );
+  const [body, setBody] = useState("");
+
+  // UNSTATE COUNT VARIBALES
+  const [bodyVariableCount, setBodyVariableCount] = useState(1);
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] font-sans text-slate-800">
@@ -36,9 +130,9 @@ const CreateTemplates = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-[calc(100vh-280px)]">
         {/* LEFT PANEL - FORM (SCROLLABLE) */}
         <div className="lg:col-span-8 overflow-y-auto">
-          <div className="rounded-xl border border-slate-200 bg-white shadow-sm ring-1 ring-slate-900/5 p-6 space-y-6">
+          <div className="rounded-xl border border-slate-200 bg-white shadow-sm ring-1 ring-slate-900/5 p-6 space-y-4">
             {/* SECTION 1 - Username */}
-            <div className="space-y-2">
+            <div className="space-y-1">
               <label className="block text-sm font-semibold text-slate-700">
                 Username
               </label>
@@ -57,8 +151,7 @@ const CreateTemplates = () => {
               />
             </div>
 
-            {/* SECTION 2 - Bot Name and Type */}
-            <div className="space-y-2">
+            <div className="space-y-1">
               <label className="block text-sm font-semibold text-slate-700">
                 Bot Name and Type
               </label>
@@ -68,14 +161,14 @@ const CreateTemplates = () => {
               <div className="relative">
                 <Select
                   options={options}
+                  styles={customSelectStyles}
                   placeholder="Select Bot Name and Type..."
                   classNamePrefix="react-select"
                 />
               </div>
             </div>
 
-            {/* SECTION 3 - Template Name */}
-            <div className="space-y-2">
+            <div className="space-y-1">
               <label className="block text-sm font-semibold text-slate-700">
                 Template Name
               </label>
@@ -96,37 +189,113 @@ const CreateTemplates = () => {
                   className="block w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 pr-16 text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none shadow-sm"
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
-                  <span className="text-xs text-slate-400">{templateName.length}/20</span>
+                  <span className="text-xs text-slate-400">
+                    {templateName.length}/20
+                  </span>
+                </div>
+              </div>
+              <label className="text-xs text-red-500">
+                {templateName.length > 0 &&
+                  !validateName(templateName) &&
+                  "Invalid name"}
+              </label>
+            </div>
+
+            <div className="space-y-1">
+              <label className="block text-sm font-semibold text-slate-700">
+                Template Type
+              </label>
+              <p className="text-xs text-slate-500">
+                Choose a message template
+              </p>
+              <div className="relative">
+                <Select
+                  value={selectedTemplateType}
+                  onChange={(option) => setSelectedTemplateType(option)}
+                  options={templateTypeOptions}
+                  styles={customSelectStyles}
+                  placeholder="Select Template Type..."
+                  classNamePrefix="react-select"
+                />
+              </div>
+            </div>
+
+            {/* TTL Section */}
+            <div className="space-y-1">
+              <label className="block text-sm font-semibold text-slate-700">
+                TTL
+              </label>
+              <p className="text-xs text-slate-500">
+                Set the time-to-live for the template
+              </p>
+              <div className="relative">
+                <input
+                  type="number"
+                  placeholder="Enter TTL value"
+                  className="block w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 pr-24 text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none shadow-sm"
+                />
+                <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                  <span className="rounded-md bg-slate-600 px-3 py-1.5 text-xs font-medium text-white">
+                    Seconds
+                  </span>
                 </div>
               </div>
             </div>
 
-            {/* SECTION 4 - Template Type */}
-            <div className="space-y-2">
-              <label className="block text-sm font-semibold text-slate-700">
-                Template Type
-              </label>
-              <div className="relative">
-                <div className="flex items-center justify-between rounded-lg border border-slate-200 bg-white px-4 py-2.5 shadow-sm cursor-not-allowed hover:border-blue-400 transition-all">
-                  <span className="text-sm text-slate-600">
-                    Rich Media Card
-                  </span>
-                  <svg
-                    className="h-4 w-4 text-slate-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 9l-7 7-7-7"
+            {selectedTemplateType.value === "standard" && (
+              <>
+                {/* Body Section */}
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between">
+                    <label className="block text-sm font-semibold text-slate-700">
+                      Body
+                    </label>
+                  </div>
+                  <p className="text-xs text-slate-500">
+                    Enter the text for your message
+                  </p>
+                  <div className="relative">
+                    <textarea
+                      placeholder="Enter the body text"
+                      className="block w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 pr-16 text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none shadow-sm resize-none min-h-[120px]"
+                      maxLength={2000}
+                      value={body}
+                      onChange={(e) => {
+                        e.target.value.length <= 2000 &&
+                          setBody(e.target.value);
+                        if (!e.target.value) {
+                          setBodyVariableCount(1);
+                        }
+                      }}
                     />
-                  </svg>
+                    <div className="absolute bottom-3 right-3 pointer-events-none">
+                      <span className="text-xs text-slate-400">
+                        {body.length}/2500
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex justify-end">
+                    <button
+                      className="flex items-center gap-1 rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium 
+                    text-slate-700 shadow-sm hover:bg-slate-50 hover:border-blue-500 
+                    hover:text-blue-600 transition-all"
+                      onClick={() => {
+                        const newText = `[custom_param_desc_${bodyVariableCount}]`;
+
+                        if (body.length + newText.length <= 2500) {
+                          setBody((prev) => prev + newText);
+                          setBodyVariableCount((prev) => prev + 1);
+                        }
+                      }}
+                    >
+                      + Variable
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </div>
+              </>
+            )}
+
+            
 
             {/* EXTRA SPACING FOR SCROLL DEMONSTRATION */}
             <div className="h-20"></div>
@@ -140,45 +309,59 @@ const CreateTemplates = () => {
               Preview
             </h2>
 
-            {/* RCS Card Preview Mock - Total height = Image width */}
-            <div className="rounded-xl border border-slate-300 bg-white shadow-lg overflow-hidden">
-              {/* Top Media Block - 3:1 Aspect Ratio (1440x480) */}
-              <div
-                className="relative w-full bg-slate-200"
-                style={{ aspectRatio: "3/1" }}
-              >
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center">
-                    <svg
-                      className="h-12 w-12 text-slate-400 mx-auto mb-2"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={1.5}
-                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                      />
-                    </svg>
-                    <p className="text-xs text-slate-500">1440 × 480</p>
+            {selectedTemplateType.value === "standard" && (
+              <>
+                <div className="rounded-xl bg-gray-100 shadow-none overflow-y-auto min-h-[150px] max-h-[300px] px-6 py-6">
+                  <p className="text-sm text-slate-700 leading-relaxed break-words overflow-wrap-anywhere">
+                    {body}
+                  </p>
+                </div>
+              </>
+            )}
+
+            {selectedTemplateType.value === "rich" && (
+              <>
+                {/* RCS Card Preview Mock - Total height = Image width */}
+                <div className="rounded-xl border border-slate-300 bg-white shadow-lg overflow-hidden">
+                  {/* Top Media Block - 3:1 Aspect Ratio (1440x480) */}
+                  <div
+                    className="relative w-full bg-slate-200"
+                    style={{ aspectRatio: "3/1" }}
+                  >
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="text-center">
+                        <svg
+                          className="h-12 w-12 text-slate-400 mx-auto mb-2"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={1.5}
+                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                          />
+                        </svg>
+                        <p className="text-xs text-slate-500">1440 × 480</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Bottom Content Block - Height is 2/3 of width (so total card height = width) */}
+                  <div
+                    className="relative w-full bg-slate-50"
+                    style={{ aspectRatio: "3/2" }}
+                  >
+                    {/* Blank area for content */}
                   </div>
                 </div>
-              </div>
 
-              {/* Bottom Content Block - Height is 2/3 of width (so total card height = width) */}
-              <div
-                className="relative w-full bg-slate-50"
-                style={{ aspectRatio: "3/2" }}
-              >
-                {/* Blank area for content */}
-              </div>
-            </div>
-
-            <p className="mt-4 text-xs text-center text-slate-500">
-              Rich media card preview (1440×480)
-            </p>
+                <p className="mt-4 text-xs text-center text-slate-500">
+                  Rich media card preview (1440×480)
+                </p>
+              </>
+            )}
           </div>
         </div>
       </div>
