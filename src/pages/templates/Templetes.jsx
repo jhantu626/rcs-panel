@@ -8,6 +8,7 @@ import {
   ChevronDown,
   FileText,
 } from "lucide-react";
+import { Link } from "react-router";
 
 const Templetes = () => {
   // Static Data
@@ -118,10 +119,10 @@ const Templetes = () => {
             <Trash2 className="h-5 w-5" />
           </button>
 
-          <button className="flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/30 hover:bg-blue-700 hover:scale-[1.01] active:scale-[0.98] transition-all">
+          <Link to={'/create-templates'} className="flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/30 hover:bg-blue-700 hover:scale-[1.01] active:scale-[0.98] transition-all">
             <Plus className="h-5 w-5" />
             <span>Create Template</span>
-          </button>
+          </Link>
         </div>
       </div>
 
@@ -280,10 +281,10 @@ const Templetes = () => {
             Get started by creating your first template. It will appear here
             once created.
           </p>
-          <button className="mt-6 inline-flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50 transition-all">
+          <Link to={'/create-templates'} className="mt-6 inline-flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50 transition-all">
             <Plus className="h-4 w-4 text-slate-500" />
             Create First Template
-          </button>
+          </Link>
         </div>
       )}
     </div>
