@@ -1,6 +1,9 @@
 import Dashboard from "./Dashboard";
-import Templetes from "./Templetes";
+
+// Templates
+import Templetes from "./templates/Templetes";
+import CreateTemplates from "./templates/CreateTemplates";
 
 import NotFound from "./NotFound";
 
-export { Dashboard, Templetes, NotFound };
+export { Dashboard, Templetes, CreateTemplates, NotFound };
