@@ -37,7 +37,7 @@ const members = [
   },
 ];
 
-const TeamList = () => {
+const UserList = () => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -96,4 +96,4 @@ const TeamList = () => {
   );
 };
 
-export default TeamList;
+export default UserList;

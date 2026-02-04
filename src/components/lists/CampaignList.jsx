@@ -64,7 +64,7 @@ const StatusBadge = ({ status }) => {
   );
 };
 
-const ProjectList = () => {
+const CampaignList = () => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -73,10 +73,10 @@ const ProjectList = () => {
       className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 col-span-1 lg:col-span-2"
     >
       <div className="flex justify-between items-center mb-6">
-        <h3 className="font-bold text-lg text-gray-800">Active Projects</h3>
+        <h3 className="font-bold text-lg text-gray-800">Campaign List</h3>
         <button className="flex items-center gap-2 bg-gray-900 text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-gray-800 transition-colors">
           <Plus size={16} />
-          <span>New Project</span>
+          <span>New Campaign</span>
         </button>
       </div>
 
@@ -84,9 +84,9 @@ const ProjectList = () => {
         <table className="w-full">
           <thead>
             <tr className="text-left text-xs font-semibold text-gray-400 uppercase tracking-wider border-b border-gray-50">
-              <th className="pb-4 pl-2">Project info</th>
+              <th className="pb-4 pl-2">Campaign info</th>
               <th className="pb-4">Status</th>
-              <th className="pb-4">Deadline</th>
+              <th className="pb-4">Date</th>
               <th className="pb-4">Progress</th>
               <th className="pb-4"></th>
             </tr>
@@ -147,11 +147,11 @@ const ProjectList = () => {
 
       <div className="mt-4 flex justify-center">
         <button className="text-gray-500 text-sm font-medium hover:text-pink-600 flex items-center gap-1 transition-colors">
-          View All Projects <ArrowRight size={16} />
+          View All Campaign <ArrowRight size={16} />
         </button>
       </div>
     </motion.div>
   );
 };
 
-export default ProjectList;
+export default CampaignList;

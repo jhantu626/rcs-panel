@@ -10,8 +10,8 @@ import {
 import StatCard from "../components/cards/StatCard";
 import AnalyticsChart from "../components/charts/AnalyticsChart";
 import ReminderCard from "../components/cards/ReminderCard";
-import ProjectList from "../components/lists/ProjectList";
-import TeamList from "../components/lists/TeamList";
+import CampaignList from "../components/lists/CampaignList";
+import UserList from "../components/lists/UserList";
 
 const Dashboard = () => {
   return (
@@ -128,10 +128,10 @@ const Dashboard = () => {
       {/* Bottom Row: Projects + Team + Reminder */}
       <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
         <div className="xl:col-span-2">
-          <ProjectList />
+          <CampaignList />
         </div>
         <div className="xl:col-span-1">
-          <TeamList />
+          <UserList />
         </div>
         <div className="xl:col-span-1">
           <ReminderCard />
