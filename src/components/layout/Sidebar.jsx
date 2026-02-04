@@ -115,7 +115,11 @@ const Sidebar = () => {
             {menuItems.map((item) => (
               <div key={item.path}>
                 <Link
-                  to={item.path}
+                  to={
+                    !item.children || item.children.length === 0
+                      ? item.path
+                      : ""
+                  }
                   onClick={() => handleItemClick(item)}
                   className={cn(
                     "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group relative",
@@ -165,7 +169,7 @@ const Sidebar = () => {
                       <div className="flex flex-col gap-1 mt-1 pl-12 pr-2 pb-1">
                         {item.children.map((subItem) => (
                           <Link
-                          to={subItem.path}
+                            to={subItem.path}
                             key={subItem.path}
                             onClick={() => setActivePath(subItem.path)}
                             className={cn(
