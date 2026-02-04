@@ -1,6 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
+import Select from "react-select";
+const options = [
+  { value: "chocolate", label: "Chocolate" },
+  { value: "strawberry", label: "Strawberry" },
+  { value: "vanilla", label: "Vanilla" },
+];
 
 const CreateTemplates = () => {
+  //STATE VARIABLES
+  const [templateName, setTemplateName] = useState("");
+
   return (
     <div className="min-h-screen bg-[#F8FAFC] font-sans text-slate-800">
       {/* PAGE HEADER */}
@@ -41,7 +50,10 @@ const CreateTemplates = () => {
                 type="text"
                 disabled
                 value="Turain_Soft_promo1"
-                className="block w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none shadow-sm cursor-not-allowed"
+                className="block w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 
+                text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:ring-2
+                 focus:ring-blue-500/20 focus:outline-none shadow-sm cursor-not-allowed"
+                aria-disabled
               />
             </div>
 
@@ -54,24 +66,11 @@ const CreateTemplates = () => {
                 Select the user above to see a list of Bot Name and Type
               </p>
               <div className="relative">
-                <div className="flex items-center justify-between rounded-lg border border-slate-200 bg-white px-4 py-2.5 shadow-sm cursor-not-allowed hover:border-blue-400 transition-all">
-                  <span className="text-sm text-slate-400">
-                    Select Bot Name and Type
-                  </span>
-                  <svg
-                    className="h-4 w-4 text-slate-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
-                </div>
+                <Select
+                  options={options}
+                  placeholder="Select Bot Name and Type..."
+                  classNamePrefix="react-select"
+                />
               </div>
             </div>
 
@@ -87,11 +86,17 @@ const CreateTemplates = () => {
               <div className="relative">
                 <input
                   type="text"
+                  value={templateName}
+                  onChange={(e) => {
+                    if (e.target.value.length < 20) {
+                      setTemplateName(e.target.value);
+                    }
+                  }}
                   placeholder="Enter template name"
                   className="block w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 pr-16 text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none shadow-sm"
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
-                  <span className="text-xs text-slate-400">0/20</span>
+                  <span className="text-xs text-slate-400">{templateName.length}/20</span>
                 </div>
               </div>
             </div>
