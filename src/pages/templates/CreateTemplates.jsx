@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import { validateName } from "../../utils/validations";
 import AddBtnCard from "../../components/cards/AddBtnCard";
 import { Phone } from "lucide-react";
 import { toast } from "react-toastify";
 import "react-date-range/dist/styles.css";
+import CarouselRatioButtonInput from "../../components/inputs/CarouselRatioButtonInput";
+import TemplateStandardCard from "../../components/cards/TemplateStandardCard";
 
 const options = [
   { value: "chocolate", label: "Chocolate" },
@@ -99,26 +101,45 @@ const customSelectStyles = {
 };
 
 const CreateTemplates = () => {
+  // FOR STANDARD CARCD
+  const [standardBody, setStandardBody] = useState("");
+  const [standardActionButtons, setStandardActionButtons] = useState([]);
+
   //STATE VARIABLES
   const [templateName, setTemplateName] = useState("");
   const [selectedTemplateType, setSelectedTemplateType] = useState(
     templateTypeOptions[0],
   );
+
   const [body, setBody] = useState("");
+  const [radioButtonsValue, setRatioButtonsValue] = useState({
+    carouselRatio: "Vertical",
+    heightAlignment: "Short",
+    headerType: "Image",
+  });
 
   // UNSTATE COUNT VARIBALES
   const [bodyVariableCount, setBodyVariableCount] = useState(1);
 
   // DIALER ACTION STATE
-  const [actionText, setActionText] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-
   const [actionButtons, setActionButtons] = useState([]);
+  const [numberOfButtons, setNumberOfButtons] = useState(11);
 
   const updateBtnContent = (index, key, value) => {
     setActionButtons((prev) =>
       prev.map((item, i) => (i === index ? { ...item, [key]: value } : item)),
     );
+  };
+
+  const updateRadioButtonsValue = (key, value) => {
+    if (key === "carouselRatio") {
+      setRatioButtonsValue((prev) => ({
+        ...prev,
+        [key]: value,
+        heightAlignment: value === "Horizontal" ? "Left" : "Short",
+      }));
+    }
+    setRatioButtonsValue((prev) => ({ ...prev, [key]: value }));
   };
 
   const addNewButton = () => {
@@ -154,8 +175,20 @@ const CreateTemplates = () => {
   };
 
   const handleSubmit = () => {
-    console.log(actionButtons);
+    if(selectedTemplateType.value==="standard"){
+      console.log(standardBody);
+      console.log(standardActionButtons);
+    }
   };
+
+  useEffect(() => {
+    if (selectedTemplateType.value === "standard") {
+      setNumberOfButtons(11);
+    } else {
+      setNumberOfButtons(4);
+    }
+    setActionButtons([]);
+  }, [selectedTemplateType]);
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] font-sans text-slate-800">
@@ -300,9 +333,8 @@ const CreateTemplates = () => {
               </div>
             </div>
 
-            {selectedTemplateType.value === "standard" && (
+            {/* {selectedTemplateType.value === "standard" && (
               <>
-                {/* Body Section */}
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
                     <label className="block text-sm font-semibold text-slate-700">
@@ -351,77 +383,143 @@ const CreateTemplates = () => {
                   </div>
                 </div>
               </>
+            )} */}
+
+            <TemplateStandardCard
+              body={standardBody}
+              setBody={setStandardBody}
+              actionButtons={standardActionButtons}
+              setActionButtons={setStandardActionButtons}
+            />
+
+            {selectedTemplateType.value === "rich" && (
+              <>
+                <CarouselRatioButtonInput
+                  title={"Card Orientation"}
+                  description={
+                    "Vertical rich cards display horizontal media at the top of the card. Horizontal rich cards display vertical media at on the left or right side of the card."
+                  }
+                  option1={"Vertical"}
+                  option2={"Horizontal"}
+                  fieldKey={"carouselRatio"}
+                  value={radioButtonsValue.carouselRatio}
+                  update={updateRadioButtonsValue}
+                />
+                <CarouselRatioButtonInput
+                  title={
+                    radioButtonsValue.carouselRatio === "Vertical"
+                      ? "Card Height"
+                      : "Media Alignment"
+                  }
+                  description={
+                    radioButtonsValue.carouselRatio === "Vertical"
+                      ? "Card must fit one of two heights."
+                      : "Media must fit one of two alignments"
+                  }
+                  option1={
+                    radioButtonsValue.carouselRatio === "Vertical"
+                      ? "Short"
+                      : "Left"
+                  }
+                  option2={
+                    radioButtonsValue.carouselRatio === "Vertical"
+                      ? "Medium"
+                      : "Right"
+                  }
+                  fieldKey={"heightAlignment"}
+                  value={radioButtonsValue.heightAlignment}
+                  update={updateRadioButtonsValue}
+                />
+                <CarouselRatioButtonInput
+                  title={"Header"}
+                  description={"Choose an option below to configure media type"}
+                  option1={"Image"}
+                  option2={"Video"}
+                  fieldKey={"headerType"}
+                  value={radioButtonsValue.headerType}
+                  update={updateRadioButtonsValue}
+                />
+              </>
             )}
 
             {/* Call to Action/Reply Buttons Section */}
-            <div className="space-y-1 gap-2">
-              <>
-                <div className="flex items-center gap-2">
-                  <label className="block text-sm font-semibold text-slate-700">
-                    Call to Action/Reply Buttons
-                  </label>
-                  <span className="rounded-md bg-teal-100 px-2.5 py-0.5 text-xs font-medium text-teal-600">
-                    Optional
-                  </span>
-                </div>
-                <p className="text-xs text-slate-500">
-                  Create a Call to Action or Reply Buttons that let customers
-                  respond to your message or take action. You can add upto 11
-                  buttons
-                </p>
-              </>
-              {actionButtons.map((btn, index) => {
-                return (
-                  <AddBtnCard
-                    key={index}
-                    index={index}
-                    selectedAction={btn.selectedAction}
-                    countryCode={btn.countryCode}
-                    phoneNumber={btn.phoneNumber}
-                    url={btn.url}
-                    urlMode={btn.urlMode}
-                    text={btn.text}
-                    label={btn.label}
-                    latitude={btn.latitude}
-                    longitude={btn.longitude}
-                    onClose={() => {
-                      setActionButtons((prev) =>
-                        prev.filter((_, i) => i !== index),
-                      );
-                    }}
-                    onUpdate={updateBtnContent}
-                    query={btn.query}
-                    endDate={btn.endDate}
-                    startDate={btn.startDate}
-                    title={btn.title}
-                    description={btn.description}
-                  />
-                );
-              })}
-              <div className="pt-1">
-                <button
-                  className="flex items-center gap-1.5 rounded-lg border border-slate-200
+            {/* {(selectedTemplateType.value === "standard" ||
+              selectedTemplateType.value === "rich") && (
+              <div className="space-y-1 gap-2">
+                <>
+                  <div className="flex items-center gap-2">
+                    <label className="block text-sm font-semibold text-slate-700">
+                      Call to Action/Reply Buttons
+                    </label>
+                    <span className="rounded-md bg-teal-100 px-2.5 py-0.5 text-xs font-medium text-teal-600">
+                      Optional
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-500">
+                    Create a Call to Action or Reply Buttons that let customers
+                    respond to your message or take action. You can add upto{" "}
+                    {numberOfButtons}
+                    buttons
+                  </p>
+                </>
+                {actionButtons.map((btn, index) => {
+                  return (
+                    <AddBtnCard
+                      key={index}
+                      index={index}
+                      selectedAction={btn.selectedAction}
+                      countryCode={btn.countryCode}
+                      phoneNumber={btn.phoneNumber}
+                      url={btn.url}
+                      urlMode={btn.urlMode}
+                      text={btn.text}
+                      label={btn.label}
+                      latitude={btn.latitude}
+                      longitude={btn.longitude}
+                      onClose={() => {
+                        setActionButtons((prev) =>
+                          prev.filter((_, i) => i !== index),
+                        );
+                      }}
+                      onUpdate={updateBtnContent}
+                      query={btn.query}
+                      endDate={btn.endDate}
+                      startDate={btn.startDate}
+                      title={btn.title}
+                      description={btn.description}
+                    />
+                  );
+                })}
+                <div className="pt-1">
+                  <button
+                    className="flex items-center gap-1.5 rounded-lg border border-slate-200
                  bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm 
                  hover:bg-slate-50 hover:border-blue-500 hover:text-blue-600
                   transition-all"
-                  onClick={() => {
-                    if (
-                      selectedTemplateType.value === "standard" &&
-                      actionButtons.length <= 11
-                    ) {
-                      addNewButton();
-                    } else {
-                      toast.info("You exceeded the limit of buttons", {
-                        position: "top-center",
-                      });
-                    }
-                  }}
-                >
-                  <span className="text-base">+</span>
-                  Add Button
-                </button>
+                    onClick={() => {
+                      if (
+                        selectedTemplateType.value === "standard" &&
+                        actionButtons.length <= numberOfButtons
+                      ) {
+                        addNewButton();
+                      } else if (
+                        selectedTemplateType.value !== "rich" &&
+                        actionButtons.length <= numberOfButtons
+                      ) {
+                        addNewButton();
+                      } else {
+                        toast.info("You exceeded the limit of buttons", {
+                          position: "top-center",
+                        });
+                      }
+                    }}
+                  >
+                    <span className="text-base">+</span>
+                    Add Button
+                  </button>
+                </div>
               </div>
-            </div>
+            )} */}
 
             {/* EXTRA SPACING FOR SCROLL DEMONSTRATION */}
             <div className="h-20"></div>
@@ -438,11 +536,11 @@ const CreateTemplates = () => {
             {selectedTemplateType.value === "standard" && (
               <>
                 <div className="rounded-xl bg-gray-100 shadow-none overflow-y-auto min-h-[150px] max-h-[300px] px-6 py-6">
-                  <p className="text-base text-slate-800 leading-normal break-words overflow-wrap-anywhere">
-                    {body}
+                  <p className="text-base text-slate-800 leading-normal break-words overflow-wrap-anywhere pb-2">
+                    {standardBody}
                   </p>
 
-                  {actionButtons.map((item, index) => {
+                  {standardActionButtons.map((item, index) => {
                     return (
                       <div
                         key={index}
