@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Select from "react-select";
 import { validateName } from "../../utils/validations";
+import AddBtnCard from "../../components/cards/AddBtnCard";
 const options = [
   { value: "chocolate", label: "Chocolate" },
   { value: "strawberry", label: "Strawberry" },
@@ -103,6 +104,17 @@ const CreateTemplates = () => {
 
   // UNSTATE COUNT VARIBALES
   const [bodyVariableCount, setBodyVariableCount] = useState(1);
+
+  // DIALER ACTION STATE
+  const [actionText, setActionText] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+
+  const actionTypeOptions = [{ value: "dialer", label: "Dialer Action" }];
+  const countryCodeOptions = [
+    { value: "+91", label: "+91" },
+    { value: "+1", label: "+1" },
+    { value: "+44", label: "+44" },
+  ];
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] font-sans text-slate-800">
@@ -295,7 +307,29 @@ const CreateTemplates = () => {
               </>
             )}
 
-            
+            {/* Call to Action/Reply Buttons Section */}
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <label className="block text-sm font-semibold text-slate-700">
+                  Call to Action/Reply Buttons
+                </label>
+                <span className="rounded-md bg-teal-100 px-2.5 py-0.5 text-xs font-medium text-teal-600">
+                  Optional
+                </span>
+              </div>
+              <p className="text-xs text-slate-500">
+                Create a Call to Action or Reply Buttons that let customers
+                respond to your message or take action. You can add upto 11
+                buttons
+              </p>
+              <AddBtnCard />
+              <div className="pt-2">
+                <button className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 hover:border-blue-500 hover:text-blue-600 transition-all">
+                  <span className="text-base">+</span>
+                  Add Button
+                </button>
+              </div>
+            </div>
 
             {/* EXTRA SPACING FOR SCROLL DEMONSTRATION */}
             <div className="h-20"></div>
