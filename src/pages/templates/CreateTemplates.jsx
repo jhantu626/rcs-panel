@@ -134,8 +134,21 @@ const CreateTemplates = () => {
           value: "+91",
           label: "+91",
         },
+        url: "",
+        urlMode: {
+          label: "Default (Browser)",
+          value: "default",
+        },
+        latitude: "",
+        longitude: "",
+        label: "",
+        query: "",
       },
     ]);
+  };
+
+  const handleSubmit = () => {
+    console.log(actionButtons);
   };
 
   return (
@@ -154,7 +167,12 @@ const CreateTemplates = () => {
           <button className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50 hover:border-slate-300 transition-all">
             Cancel
           </button>
-          <button className="flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/30 hover:bg-blue-700 hover:scale-[1.01] active:scale-[0.98] transition-all">
+          <button
+            className="flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5
+           text-sm font-semibold text-white shadow-lg shadow-blue-600/30 hover:bg-blue-700
+            hover:scale-[1.01] active:scale-[0.98] transition-all"
+            onClick={handleSubmit}
+          >
             Submit
           </button>
         </div>
@@ -354,13 +372,19 @@ const CreateTemplates = () => {
                     selectedAction={btn.selectedAction}
                     countryCode={btn.countryCode}
                     phoneNumber={btn.phoneNumber}
+                    url={btn.url}
+                    urlMode={btn.urlMode}
                     text={btn.text}
+                    label={btn.label}
+                    latitude={btn.latitude}
+                    longitude={btn.longitude}
                     onClose={() => {
                       setActionButtons((prev) =>
                         prev.filter((_, i) => i !== index),
                       );
                     }}
                     onUpdate={updateBtnContent}
+                    query={btn.query}
                   />
                 );
               })}

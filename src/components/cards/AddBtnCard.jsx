@@ -3,20 +3,16 @@ import { useState } from "react";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 import {
-  Calendar,
   CalendarDays,
-  CornerUpRight,
   Globe,
-  Link,
   LocateFixed,
   MapPin,
-  MessageCircle,
   Phone,
   ReplyIcon,
-  Share,
   X,
 } from "lucide-react";
 import ButtonInput from "../inputs/ButtonInput";
+import ButtonSelectInput from "../inputs/ButtonSelectInput";
 
 const animatedComponents = makeAnimated();
 const FIELD_HEIGHT = "42px";
@@ -112,6 +108,24 @@ const countryCodeOptions = [
     label: "+91",
   },
 ];
+const urlModeOptions = [
+  {
+    label: "Default (Browser)",
+    value: "default",
+  },
+  {
+    label: "Webview - Full",
+    value: "webview-full",
+  },
+  {
+    label: "Webview - Tall",
+    value: "webview-tall",
+  },
+  {
+    label: "Webview - Half",
+    value: "webview-half",
+  },
+];
 
 const AddBtnCard = ({
   index,
@@ -121,6 +135,12 @@ const AddBtnCard = ({
   onUpdate = (index, key, value) => {},
   phoneNumber = "",
   countryCode = countryCodeOptions[0],
+  url = "",
+  urlMode = urlModeOptions[0],
+  latitude = "",
+  longitude = "",
+  label = "",
+  query = "",
 }) => {
   return (
     <div
@@ -167,6 +187,7 @@ const AddBtnCard = ({
           <div className="relative group">
             <input
               value={text}
+              max={25}
               type="text"
               onChange={(e) => {
                 onUpdate(index, "text", e.target.value);
@@ -175,13 +196,13 @@ const AddBtnCard = ({
           transition-all placeholder:text-slate-400 text-slate-700
           hover:border-slate-300 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/10 focus:outline-none 
           disabled:bg-slate-50 disabled:cursor-not-allowed"
-              placeholder={'Enter text'}
+              placeholder={"Enter text"}
             />
 
             {/* Character counter inside input - Subtle styling */}
             <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
               <span className="text-[13px] text-slate-400 tabular-nums">
-                {text.length}/20
+                {text.length}/25
               </span>
             </div>
           </div>
@@ -225,6 +246,136 @@ const AddBtnCard = ({
                 }
               }}
               showVariableButton={true}
+            />
+          </>
+        )}
+
+        {selectedAction.value === "url" && (
+          <>
+            {/* URL */}
+            <ButtonInput
+              label="URL/URL to open"
+              value={url}
+              maxLength={2048}
+              placeholder="Enter URL"
+              onChange={(type = "normal", value, onSuccess = () => {}) => {
+                if (type === "normal") {
+                  onUpdate(index, "url", value);
+                } else if (type === "add") {
+                  onUpdate(index, "url", "[custom_param]");
+                  onSuccess();
+                } else {
+                  onUpdate(index, "url", "");
+                  onSuccess();
+                }
+              }}
+              showVariableButton={true}
+            />
+            <ButtonSelectInput
+              index={index}
+              label={"Mode"}
+              keyToUpdate="urlMode"
+              onUpdate={onUpdate}
+              options={urlModeOptions}
+              value={urlMode}
+            />
+          </>
+        )}
+
+        {selectedAction.value === "viewLocationlatlong" && (
+          <>
+            <div className="flex-1 min-w-[220px]">
+              {/* Label - Standard typography matching image */}
+              <label className="block text-[13px] font-medium text-slate-900 mb-1.5 ml-0.5">
+                Lattitude*
+              </label>
+
+              <div className="relative group">
+                <input
+                  value={latitude}
+                  type="text"
+                  onChange={(e) => {
+                    onUpdate(index, "latitude", e.target.value);
+                  }}
+                  className="w-full h-[42px] rounded-lg border border-slate-200 bg-white px-4 pr-20 text-[14px] 
+          transition-all placeholder:text-slate-400 text-slate-700
+          hover:border-slate-300 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/10 focus:outline-none 
+          disabled:bg-slate-50 disabled:cursor-not-allowed"
+                  placeholder={"Enter text"}
+                />
+
+                {/* Character counter inside input - Subtle styling */}
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                  <span className="text-[13px] text-slate-400 tabular-nums"></span>
+                </div>
+              </div>
+            </div>
+            <div className="flex-1 min-w-[220px]">
+              {/* Label - Standard typography matching image */}
+              <label className="block text-[13px] font-medium text-slate-900 mb-1.5 ml-0.5">
+                Longitude*
+              </label>
+
+              <div className="relative group">
+                <input
+                  value={longitude}
+                  type="text"
+                  onChange={(e) => {
+                    onUpdate(index, "longitude", e.target.value);
+                  }}
+                  className="w-full h-[42px] rounded-lg border border-slate-200 bg-white px-4 pr-20 text-[14px] 
+          transition-all placeholder:text-slate-400 text-slate-700
+          hover:border-slate-300 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/10 focus:outline-none 
+          disabled:bg-slate-50 disabled:cursor-not-allowed"
+                  placeholder={"Enter text"}
+                />
+
+                {/* Character counter inside input - Subtle styling */}
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                  <span className="text-[13px] text-slate-400 tabular-nums"></span>
+                </div>
+              </div>
+            </div>
+            <ButtonInput
+              label="Label"
+              value={label}
+              maxLength={25}
+              placeholder="Enter text"
+              onChange={(type = "normal", value, onSuccess = () => {}) => {
+                if (type === "normal") {
+                  onUpdate(index, "label", value);
+                } else if (type === "add") {
+                  onUpdate(index, "label", "[custom_param]");
+                  onSuccess();
+                } else {
+                  onUpdate(index, "label", "");
+                  onSuccess();
+                }
+              }}
+              showVariableButton={false}
+            />
+          </>
+        )}
+
+        {selectedAction.value === "viewLocationQuery" && (
+          <>
+            <ButtonInput
+              label="Query"
+              value={query}
+              maxLength={1024}
+              placeholder="Enter query"
+              onChange={(type = "normal", value, onSuccess = () => {}) => {
+                if (type === "normal") {
+                  onUpdate(index, "query", value);
+                } else if (type === "add") {
+                  onUpdate(index, "query", "[custom_param]");
+                  onSuccess();
+                } else {
+                  onUpdate(index, "query", "");
+                  onSuccess();
+                }
+              }}
+              showVariableButton={false}
             />
           </>
         )}
