@@ -13,6 +13,9 @@ import {
 } from "lucide-react";
 import ButtonInput from "../inputs/ButtonInput";
 import ButtonSelectInput from "../inputs/ButtonSelectInput";
+import { Calendar, DateRange } from "react-date-range";
+import "react-date-range/dist/styles.css"; // main style file
+import "react-date-range/dist/theme/default.css"; // theme css file
 
 const animatedComponents = makeAnimated();
 const FIELD_HEIGHT = "42px";
@@ -141,6 +144,10 @@ const AddBtnCard = ({
   longitude = "",
   label = "",
   query = "",
+  startDate = new Date(),
+  endDate = new Date(new Date().setDate(new Date().getDate() + 1)),
+  title = "",
+  description = "",
 }) => {
   return (
     <div
@@ -377,6 +384,72 @@ const AddBtnCard = ({
               }}
               showVariableButton={false}
             />
+          </>
+        )}
+
+        {selectedAction.value === "createCalendarEvent" && (
+          <>
+            <ButtonInput
+              label="Event Title"
+              value={title}
+              maxLength={100}
+              placeholder="Enter text"
+              onChange={(type = "normal", value, onSuccess = () => {}) => {
+                if (type === "normal") {
+                  onUpdate(index, "title", value);
+                } else if (type === "add") {
+                  onUpdate(index, "title", "[custom_param]");
+                  onSuccess();
+                } else {
+                  onUpdate(index, "title", "");
+                  onSuccess();
+                }
+              }}
+              showVariableButton={false}
+            />
+            <ButtonInput
+              label="Event Description"
+              value={description}
+              maxLength={500}
+              placeholder="Enter description"
+              onChange={(type = "normal", value, onSuccess = () => {}) => {
+                if (type === "normal") {
+                  onUpdate(index, "description", value);
+                } else if (type === "add") {
+                  onUpdate(index, "description", "[custom_param]");
+                  onSuccess();
+                } else {
+                  onUpdate(index, "description", "");
+                  onSuccess();
+                }
+              }}
+              showVariableButton={false}
+            />
+            <div className="shrink-0">
+              <label className="block text-[13px] font-medium text-slate-900 mb-1.5 ml-0.5">
+                Event Date & Time
+              </label>
+
+              <div className="mt-2 border border-slate-200 rounded-lg overflow-hidden shadow-sm">
+                <DateRange
+                  editableDateInputs={true}
+                  onChange={(item) => {
+                    console.log("item", item);
+                    onUpdate(index, "startDate", item.selection.startDate);
+                    onUpdate(index, "endDate", item.selection.endDate);
+                  }}
+                  moveRangeOnFirstSelection={false}
+                  ranges={[
+                    {
+                      startDate: startDate,
+                      endDate: endDate,
+                      key: "selection",
+                    },
+                  ]}
+                  rangeColors={["#3b82f6"]}
+                />
+              </div>
+            </div>
           </>
         )}
       </div>

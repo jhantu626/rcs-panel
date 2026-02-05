@@ -4,6 +4,8 @@ import { validateName } from "../../utils/validations";
 import AddBtnCard from "../../components/cards/AddBtnCard";
 import { Phone } from "lucide-react";
 import { toast } from "react-toastify";
+import "react-date-range/dist/styles.css";
+
 const options = [
   { value: "chocolate", label: "Chocolate" },
   { value: "strawberry", label: "Strawberry" },
@@ -143,6 +145,10 @@ const CreateTemplates = () => {
         longitude: "",
         label: "",
         query: "",
+        startDate: new Date(),
+        endDate: new Date(new Date().setDate(new Date().getDate() + 1)),
+        title: "",
+        description: "",
       },
     ]);
   };
@@ -385,6 +391,10 @@ const CreateTemplates = () => {
                     }}
                     onUpdate={updateBtnContent}
                     query={btn.query}
+                    endDate={btn.endDate}
+                    startDate={btn.startDate}
+                    title={btn.title}
+                    description={btn.description}
                   />
                 );
               })}
