@@ -158,16 +158,34 @@ const AddBtnCard = ({
         </div>
 
         {/* Text */}
-        <ButtonInput
-          label="Text"
-          value={text}
-          maxLength={25}
-          placeholder="Enter text"
-          onChange={(value) => {
-            onUpdate(index, "text", value);
-          }}
-          showVariableButton={false}
-        />
+        <div className="flex-1 min-w-[220px]">
+          {/* Label - Standard typography matching image */}
+          <label className="block text-[13px] font-medium text-slate-900 mb-1.5 ml-0.5">
+            Text
+          </label>
+
+          <div className="relative group">
+            <input
+              value={text}
+              type="text"
+              onChange={(e) => {
+                onUpdate(index, "text", e.target.value);
+              }}
+              className="w-full h-[42px] rounded-lg border border-slate-200 bg-white px-4 pr-20 text-[14px] 
+          transition-all placeholder:text-slate-400 text-slate-700
+          hover:border-slate-300 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/10 focus:outline-none 
+          disabled:bg-slate-50 disabled:cursor-not-allowed"
+              placeholder={'Enter text'}
+            />
+
+            {/* Character counter inside input - Subtle styling */}
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+              <span className="text-[13px] text-slate-400 tabular-nums">
+                {text.length}/20
+              </span>
+            </div>
+          </div>
+        </div>
 
         {selectedAction.value === "dialer" && (
           <>

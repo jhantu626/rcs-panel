@@ -3,6 +3,7 @@ import Select from "react-select";
 import { validateName } from "../../utils/validations";
 import AddBtnCard from "../../components/cards/AddBtnCard";
 import { Phone } from "lucide-react";
+import { toast } from "react-toastify";
 const options = [
   { value: "chocolate", label: "Chocolate" },
   { value: "strawberry", label: "Strawberry" },
@@ -116,6 +117,25 @@ const CreateTemplates = () => {
     setActionButtons((prev) =>
       prev.map((item, i) => (i === index ? { ...item, [key]: value } : item)),
     );
+  };
+
+  const addNewButton = () => {
+    setActionButtons((prev) => [
+      ...prev,
+      {
+        selectedAction: {
+          value: "dialer",
+          label: "Dialer Action",
+          icon: <Phone size={16} color="#2462eb" />,
+        },
+        text: "",
+        phoneNumber: "",
+        countryCode: {
+          value: "+91",
+          label: "+91",
+        },
+      },
+    ]);
   };
 
   return (
@@ -353,26 +373,13 @@ const CreateTemplates = () => {
                   onClick={() => {
                     if (
                       selectedTemplateType.value === "standard" &&
-                      actionButtons.length < 11
+                      actionButtons.length <= 11
                     ) {
-                      setActionButtons((prev) => [
-                        ...prev,
-                        {
-                          selectedAction: {
-                            value: "dialer",
-                            label: "Dialer Action",
-                            icon: <Phone size={16} color="#2462eb" />,
-                          },
-                          text: "",
-                          phoneNumber: "",
-                          countryCode: {
-                            value: "+91",
-                            label: "+91",
-                          },
-                        },
-                      ]);
-                    }else{
-                      
+                      addNewButton();
+                    } else {
+                      toast.info("You exceeded the limit of buttons", {
+                        position: "top-center",
+                      });
                     }
                   }}
                 >
@@ -397,9 +404,10 @@ const CreateTemplates = () => {
             {selectedTemplateType.value === "standard" && (
               <>
                 <div className="rounded-xl bg-gray-100 shadow-none overflow-y-auto min-h-[150px] max-h-[300px] px-6 py-6">
-                  <p className="text-sm text-slate-700 leading-relaxed break-words overflow-wrap-anywhere">
+                  <p className="text-base text-slate-800 leading-normal break-words overflow-wrap-anywhere">
                     {body}
                   </p>
+
                   {actionButtons.map((item, index) => {
                     return (
                       <div
