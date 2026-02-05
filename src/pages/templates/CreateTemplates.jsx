@@ -351,22 +351,29 @@ const CreateTemplates = () => {
                  hover:bg-slate-50 hover:border-blue-500 hover:text-blue-600
                   transition-all"
                   onClick={() => {
-                    setActionButtons((prev) => [
-                      ...prev,
-                      {
-                        selectedAction: {
-                          value: "dialer",
-                          label: "Dialer Action",
-                          icon: <Phone size={16} color="#2462eb" />,
+                    if (
+                      selectedTemplateType.value === "standard" &&
+                      actionButtons.length < 11
+                    ) {
+                      setActionButtons((prev) => [
+                        ...prev,
+                        {
+                          selectedAction: {
+                            value: "dialer",
+                            label: "Dialer Action",
+                            icon: <Phone size={16} color="#2462eb" />,
+                          },
+                          text: "",
+                          phoneNumber: "",
+                          countryCode: {
+                            value: "+91",
+                            label: "+91",
+                          },
                         },
-                        text: "",
-                        phoneNumber: "",
-                        countryCode: {
-                          value: "+91",
-                          label: "+91",
-                        },
-                      },
-                    ]);
+                      ]);
+                    }else{
+                      
+                    }
                   }}
                 >
                   <span className="text-base">+</span>
