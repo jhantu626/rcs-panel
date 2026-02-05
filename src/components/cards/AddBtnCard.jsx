@@ -2,7 +2,21 @@ import { label } from "framer-motion/client";
 import { useState } from "react";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
-import { X } from "lucide-react";
+import {
+  Calendar,
+  CalendarDays,
+  CornerUpRight,
+  Globe,
+  Link,
+  LocateFixed,
+  MapPin,
+  MessageCircle,
+  Phone,
+  ReplyIcon,
+  Share,
+  X,
+} from "lucide-react";
+import ButtonInput from "../inputs/ButtonInput";
 
 const animatedComponents = makeAnimated();
 const FIELD_HEIGHT = "42px";
@@ -58,43 +72,59 @@ const actionTypesOptions = [
   {
     value: "dialer",
     label: "Dialer Action",
+    icon: <Phone size={16} color="#2462eb" />,
   },
   {
     value: "url",
     label: "Url Redirect",
+    icon: <Globe size={16} color="#2462eb" />,
   },
   {
     value: "reply",
     label: "Reply",
+    icon: <ReplyIcon size={16} color="#2462eb" />,
   },
   {
     value: "viewLocationlatlong",
     label: "View Location(Lat/Long)",
+    icon: <MapPin size={16} color="#2462eb" />,
   },
   {
     value: "viewLocationQuery",
     label: "View Location(Location Query)",
+    icon: <MapPin size={16} color="#2462eb" />,
   },
   {
     value: "shareLocation",
     label: "Share Location",
+    icon: <LocateFixed size={16} color="#2462eb" />,
   },
   {
     value: "createCalendarEvent",
     label: "Create Calendar Event",
+    icon: <CalendarDays size={16} color="#2462eb" />,
+  },
+];
+
+const countryCodeOptions = [
+  {
+    value: "+91",
+    label: "+91",
   },
 ];
 
 const AddBtnCard = ({
   index,
-  selectedAction = actionTypesOptions[0],
+  selectedAction,
   text = "",
-  setText,
   onClose = () => {},
+  onUpdate = (index, key, value) => {},
+  phoneNumber = "",
+  countryCode = countryCodeOptions[0],
 }) => {
   return (
     <div
-      className="relative my-10 rounded-lg border border-slate-200 bg-white p-4 shadow-sm"
+      className="relative my-6 rounded-lg border border-slate-200 bg-white p-4 shadow-sm"
       key={index}
     >
       {/* Close Button */}
@@ -107,16 +137,19 @@ const AddBtnCard = ({
       </button>
 
       {/* FLEX WRAP LAYOUT */}
-      <div className="flex flex-wrap gap-3 items-end">
+      <div className="flex flex-wrap gap-3 items-start">
         {/* Select */}
-        <div className="space-y-1 shrink-0">
-          <label className="text-[11px] font-medium text-slate-500">
+        <div className="shrink-0">
+          <label className="block text-[13px] font-medium text-slate-900 mb-1.5 ml-0.5">
             Type of Action
           </label>
 
           <Select
             options={actionTypesOptions}
             value={selectedAction}
+            onChange={(value) => {
+              onUpdate(index, "selectedAction", value);
+            }}
             styles={customSelectStyles}
             components={animatedComponents}
             isSearchable={false}
@@ -125,21 +158,58 @@ const AddBtnCard = ({
         </div>
 
         {/* Text */}
-        <div className="space-y-1 min-w-[220px] flex-1">
-          <label className="text-[11px] font-medium text-slate-500">Text</label>
+        <ButtonInput
+          label="Text"
+          value={text}
+          maxLength={25}
+          placeholder="Enter text"
+          onChange={(value) => {
+            onUpdate(index, "text", value);
+          }}
+          showVariableButton={false}
+        />
 
-          <div className="relative">
-            <input
-              value={text}
-              onChange={(e) => setText(e.target.value.slice(0, 25))}
-              className="w-full h-[42px] rounded-md border border-slate-200 px-3 text-sm"
-              placeholder="Enter text"
+        {selectedAction.value === "dialer" && (
+          <>
+            {/* Country Code */}
+            <div className="shrink-0">
+              <label className="block text-[13px] font-medium text-slate-900 mb-1.5 ml-0.5">
+                Country Code
+              </label>
+
+              <Select
+                options={countryCodeOptions}
+                value={countryCode}
+                onChange={(value) => {
+                  onUpdate(index, "countryCode", value);
+                }}
+                styles={customSelectStyles}
+                components={animatedComponents}
+                isSearchable={false}
+                menuPosition="fixed"
+              />
+            </div>
+            {/* Phone Number */}
+            <ButtonInput
+              label="Phone Number"
+              value={phoneNumber}
+              maxLength={15}
+              placeholder="Enter number"
+              onChange={(type = "normal", value, onSuccess = () => {}) => {
+                if (type === "normal") {
+                  onUpdate(index, "phoneNumber", value);
+                } else if (type === "add") {
+                  onUpdate(index, "phoneNumber", "[custom_param]");
+                  onSuccess();
+                } else {
+                  onUpdate(index, "phoneNumber", "");
+                  onSuccess();
+                }
+              }}
+              showVariableButton={true}
             />
-            <span className="absolute right-2 top-2 text-[10px] text-slate-400">
-              {text.length}/25
-            </span>
-          </div>
-        </div>
+          </>
+        )}
       </div>
     </div>
   );

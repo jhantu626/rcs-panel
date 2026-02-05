@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Select from "react-select";
 import { validateName } from "../../utils/validations";
 import AddBtnCard from "../../components/cards/AddBtnCard";
+import { Phone } from "lucide-react";
 const options = [
   { value: "chocolate", label: "Chocolate" },
   { value: "strawberry", label: "Strawberry" },
@@ -109,12 +110,13 @@ const CreateTemplates = () => {
   const [actionText, setActionText] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
 
-  const actionTypeOptions = [{ value: "dialer", label: "Dialer Action" }];
-  const countryCodeOptions = [
-    { value: "+91", label: "+91" },
-    { value: "+1", label: "+1" },
-    { value: "+44", label: "+44" },
-  ];
+  const [actionButtons, setActionButtons] = useState([]);
+
+  const updateBtnContent = (index, key, value) => {
+    setActionButtons((prev) =>
+      prev.map((item, i) => (i === index ? { ...item, [key]: value } : item)),
+    );
+  };
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] font-sans text-slate-800">
@@ -308,23 +310,65 @@ const CreateTemplates = () => {
             )}
 
             {/* Call to Action/Reply Buttons Section */}
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <label className="block text-sm font-semibold text-slate-700">
-                  Call to Action/Reply Buttons
-                </label>
-                <span className="rounded-md bg-teal-100 px-2.5 py-0.5 text-xs font-medium text-teal-600">
-                  Optional
-                </span>
-              </div>
-              <p className="text-xs text-slate-500">
-                Create a Call to Action or Reply Buttons that let customers
-                respond to your message or take action. You can add upto 11
-                buttons
-              </p>
-              <AddBtnCard />
-              <div className="pt-2">
-                <button className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 hover:border-blue-500 hover:text-blue-600 transition-all">
+            <div className="space-y-1 gap-2">
+              <>
+                <div className="flex items-center gap-2">
+                  <label className="block text-sm font-semibold text-slate-700">
+                    Call to Action/Reply Buttons
+                  </label>
+                  <span className="rounded-md bg-teal-100 px-2.5 py-0.5 text-xs font-medium text-teal-600">
+                    Optional
+                  </span>
+                </div>
+                <p className="text-xs text-slate-500">
+                  Create a Call to Action or Reply Buttons that let customers
+                  respond to your message or take action. You can add upto 11
+                  buttons
+                </p>
+              </>
+              {actionButtons.map((btn, index) => {
+                return (
+                  <AddBtnCard
+                    key={index}
+                    index={index}
+                    selectedAction={btn.selectedAction}
+                    countryCode={btn.countryCode}
+                    phoneNumber={btn.phoneNumber}
+                    text={btn.text}
+                    onClose={() => {
+                      setActionButtons((prev) =>
+                        prev.filter((_, i) => i !== index),
+                      );
+                    }}
+                    onUpdate={updateBtnContent}
+                  />
+                );
+              })}
+              <div className="pt-1">
+                <button
+                  className="flex items-center gap-1.5 rounded-lg border border-slate-200
+                 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm 
+                 hover:bg-slate-50 hover:border-blue-500 hover:text-blue-600
+                  transition-all"
+                  onClick={() => {
+                    setActionButtons((prev) => [
+                      ...prev,
+                      {
+                        selectedAction: {
+                          value: "dialer",
+                          label: "Dialer Action",
+                          icon: <Phone size={16} color="#2462eb" />,
+                        },
+                        text: "",
+                        phoneNumber: "",
+                        countryCode: {
+                          value: "+91",
+                          label: "+91",
+                        },
+                      },
+                    ]);
+                  }}
+                >
                   <span className="text-base">+</span>
                   Add Button
                 </button>
@@ -349,6 +393,22 @@ const CreateTemplates = () => {
                   <p className="text-sm text-slate-700 leading-relaxed break-words overflow-wrap-anywhere">
                     {body}
                   </p>
+                  {actionButtons.map((item, index) => {
+                    return (
+                      <div
+                        key={index}
+                        className="my-2 flex items-center justify-center gap-2"
+                      >
+                        <span className="flex items-center">
+                          {item?.selectedAction?.icon}
+                        </span>
+
+                        <p className="text-[14px] font-bold text-blue-600">
+                          {item.text}
+                        </p>
+                      </div>
+                    );
+                  })}
                 </div>
               </>
             )}
