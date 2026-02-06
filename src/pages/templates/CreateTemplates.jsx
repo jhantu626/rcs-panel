@@ -7,6 +7,8 @@ import { toast } from "react-toastify";
 import "react-date-range/dist/styles.css";
 import CarouselRatioButtonInput from "../../components/inputs/CarouselRatioButtonInput";
 import TemplateStandardCard from "../../components/cards/TemplateStandardCard";
+import TemplateRichCard from "../../components/cards/TemplateRichCard";
+import { body } from "framer-motion/client";
 
 const options = [
   { value: "chocolate", label: "Chocolate" },
@@ -101,94 +103,178 @@ const customSelectStyles = {
 };
 
 const CreateTemplates = () => {
+  //STATE VARIABLES
+  const [templateName, setTemplateName] = useState("");
+  const [selectedTemplateType, setSelectedTemplateType] = useState(
+    templateTypeOptions[1],
+  );
+
   // FOR STANDARD CARCD
   const [standardBody, setStandardBody] = useState("");
   const [standardActionButtons, setStandardActionButtons] = useState([]);
 
-  //STATE VARIABLES
-  const [templateName, setTemplateName] = useState("");
-  const [selectedTemplateType, setSelectedTemplateType] = useState(
-    templateTypeOptions[0],
-  );
-
-  const [body, setBody] = useState("");
-  const [radioButtonsValue, setRatioButtonsValue] = useState({
+  // FOR RICH CARCD
+  const [richCard, setRichCard] = useState({
     carouselRatio: "Vertical",
     heightAlignment: "Short",
     headerType: "Image",
+    imageWidth: 1440,
+    imageHeight: 480,
+    title: "",
+    body: "",
+    uploadedImage: null,
+    buttons: [],
   });
 
-  // UNSTATE COUNT VARIBALES
-  const [bodyVariableCount, setBodyVariableCount] = useState(1);
-
-  // DIALER ACTION STATE
-  const [actionButtons, setActionButtons] = useState([]);
-  const [numberOfButtons, setNumberOfButtons] = useState(11);
-
-  const updateBtnContent = (index, key, value) => {
-    setActionButtons((prev) =>
-      prev.map((item, i) => (i === index ? { ...item, [key]: value } : item)),
-    );
+  // ADD NEW BUTTONS IN RICH CARD BUTTON
+  const addRichCardButton = () => {
+    if (richCard.buttons.length < 4) {
+      setRichCard((prev) => {
+        return {
+          ...prev,
+          buttons: [
+            ...prev.buttons,
+            {
+              selectedAction: {
+                value: "dialer",
+                label: "Dialer Action",
+                icon: <Phone size={16} color="#2462eb" />,
+              },
+              text: "",
+              phoneNumber: "",
+              countryCode: {
+                value: "+91",
+                label: "+91",
+              },
+              url: "",
+              urlMode: {
+                label: "Default (Browser)",
+                value: "default",
+              },
+              latitude: "",
+              longitude: "",
+              label: "",
+              query: "",
+              startDate: new Date(),
+              endDate: new Date(new Date().setDate(new Date().getDate() + 1)),
+              title: "",
+              description: "",
+            },
+          ],
+        };
+      });
+    } else {
+      toast.info("You exceeded the limit of buttons", {
+        position: "top-center",
+      });
+    }
   };
-
-  const updateRadioButtonsValue = (key, value) => {
-    if (key === "carouselRatio") {
-      setRatioButtonsValue((prev) => ({
+  // REMOVE BUTTON FROM RICH CARD BUTTON
+  const removeRichCardButton = (index) => {
+    setRichCard((prev) => {
+      return {
+        ...prev,
+        buttons: prev.buttons.filter((_, i) => i !== index),
+      };
+    });
+  };
+  // UPDATE RICH CARD BUTTON CONTENT
+  const updateRichCardButtonContent = (index, key, value) => {
+    setRichCard((prev) => {
+      return {
+        ...prev,
+        buttons: prev.buttons.map((btn, i) => {
+          if (i === index) {
+            return {
+              ...btn,
+              [key]: value,
+            };
+          }
+          return btn;
+        }),
+      };
+    });
+  };
+  // UPDATE RICH CARD CONTENT
+  const updateRichCardContent = (key, value) => {
+    setRichCard((prev) => {
+      return {
         ...prev,
         [key]: value,
-        heightAlignment: value === "Horizontal" ? "Left" : "Short",
-      }));
+      };
+    });
+    if (key === "carouselRatio") {
+      setRichCard((prev) => {
+        if (value === "Vertical") {
+          return {
+            ...prev,
+            heightAlignment: "Short",
+            imageWidth: 1440,
+            imageHeight: 480,
+            uploadedImage: null,
+          };
+        } else {
+          return {
+            ...prev,
+            heightAlignment: "Left",
+            imageWidth: 768,
+            imageHeight: 1024,
+            uploadedImage: null,
+          };
+        }
+      });
     }
-    setRatioButtonsValue((prev) => ({ ...prev, [key]: value }));
-  };
 
-  const addNewButton = () => {
-    setActionButtons((prev) => [
-      ...prev,
-      {
-        selectedAction: {
-          value: "dialer",
-          label: "Dialer Action",
-          icon: <Phone size={16} color="#2462eb" />,
-        },
-        text: "",
-        phoneNumber: "",
-        countryCode: {
-          value: "+91",
-          label: "+91",
-        },
-        url: "",
-        urlMode: {
-          label: "Default (Browser)",
-          value: "default",
-        },
-        latitude: "",
-        longitude: "",
-        label: "",
-        query: "",
-        startDate: new Date(),
-        endDate: new Date(new Date().setDate(new Date().getDate() + 1)),
-        title: "",
-        description: "",
-      },
-    ]);
+    if (key === "heightAlignment") {
+      switch (value) {
+        case "Short":
+          setRichCard((prev) => {
+            return {
+              ...prev,
+              imageWidth: 1440,
+              imageHeight: 480,
+              uploadedImage: null,
+            };
+          });
+          break;
+        case "Medium":
+          setRichCard((prev) => {
+            return {
+              ...prev,
+              imageWidth: 1440,
+              imageHeight: 720,
+              uploadedImage: null,
+            };
+          });
+          break;
+        case "Left":
+          setRichCard((prev) => {
+            return {
+              ...prev,
+              imageWidth: 768,
+              imageHeight: 1024,
+            };
+          });
+          break;
+        case "Right":
+          setRichCard((prev) => {
+            return {
+              ...prev,
+              imageWidth: 768,
+              imageHeight: 1024,
+            };
+          });
+          break;
+      }
+    }
   };
 
   const handleSubmit = () => {
-    if(selectedTemplateType.value==="standard"){
+    if (selectedTemplateType.value === "standard") {
       console.log(standardBody);
       console.log(standardActionButtons);
     }
   };
-
-  useEffect(() => {
-    if (selectedTemplateType.value === "standard") {
-      setNumberOfButtons(11);
-    } else {
-      setNumberOfButtons(4);
-    }
-    setActionButtons([]);
-  }, [selectedTemplateType]);
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] font-sans text-slate-800">
@@ -218,7 +304,7 @@ const CreateTemplates = () => {
       </div>
 
       {/* MAIN CONTENT AREA - TWO PANEL LAYOUT */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-[calc(100vh-280px)]">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-[calc(108vh-280px)]">
         {/* LEFT PANEL - FORM (SCROLLABLE) */}
         <div className="lg:col-span-8 overflow-y-auto">
           <div className="rounded-xl border border-slate-200 bg-white shadow-sm ring-1 ring-slate-900/5 p-6 space-y-4">
@@ -333,193 +419,24 @@ const CreateTemplates = () => {
               </div>
             </div>
 
-            {/* {selectedTemplateType.value === "standard" && (
-              <>
-                <div className="space-y-1">
-                  <div className="flex items-center justify-between">
-                    <label className="block text-sm font-semibold text-slate-700">
-                      Body
-                    </label>
-                  </div>
-                  <p className="text-xs text-slate-500">
-                    Enter the text for your message
-                  </p>
-                  <div className="relative">
-                    <textarea
-                      placeholder="Enter the body text"
-                      className="block w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 pr-16 text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none shadow-sm resize-none min-h-[120px]"
-                      maxLength={2000}
-                      value={body}
-                      onChange={(e) => {
-                        e.target.value.length <= 2000 &&
-                          setBody(e.target.value);
-                        if (!e.target.value) {
-                          setBodyVariableCount(1);
-                        }
-                      }}
-                    />
-                    <div className="absolute bottom-3 right-3 pointer-events-none">
-                      <span className="text-xs text-slate-400">
-                        {body.length}/2500
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex justify-end">
-                    <button
-                      className="flex items-center gap-1 rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium 
-                    text-slate-700 shadow-sm hover:bg-slate-50 hover:border-blue-500 
-                    hover:text-blue-600 transition-all"
-                      onClick={() => {
-                        const newText = `[custom_param_desc_${bodyVariableCount}]`;
-
-                        if (body.length + newText.length <= 2500) {
-                          setBody((prev) => prev + newText);
-                          setBodyVariableCount((prev) => prev + 1);
-                        }
-                      }}
-                    >
-                      + Variable
-                    </button>
-                  </div>
-                </div>
-              </>
-            )} */}
-
-            <TemplateStandardCard
-              body={standardBody}
-              setBody={setStandardBody}
-              actionButtons={standardActionButtons}
-              setActionButtons={setStandardActionButtons}
-            />
-
-            {selectedTemplateType.value === "rich" && (
-              <>
-                <CarouselRatioButtonInput
-                  title={"Card Orientation"}
-                  description={
-                    "Vertical rich cards display horizontal media at the top of the card. Horizontal rich cards display vertical media at on the left or right side of the card."
-                  }
-                  option1={"Vertical"}
-                  option2={"Horizontal"}
-                  fieldKey={"carouselRatio"}
-                  value={radioButtonsValue.carouselRatio}
-                  update={updateRadioButtonsValue}
-                />
-                <CarouselRatioButtonInput
-                  title={
-                    radioButtonsValue.carouselRatio === "Vertical"
-                      ? "Card Height"
-                      : "Media Alignment"
-                  }
-                  description={
-                    radioButtonsValue.carouselRatio === "Vertical"
-                      ? "Card must fit one of two heights."
-                      : "Media must fit one of two alignments"
-                  }
-                  option1={
-                    radioButtonsValue.carouselRatio === "Vertical"
-                      ? "Short"
-                      : "Left"
-                  }
-                  option2={
-                    radioButtonsValue.carouselRatio === "Vertical"
-                      ? "Medium"
-                      : "Right"
-                  }
-                  fieldKey={"heightAlignment"}
-                  value={radioButtonsValue.heightAlignment}
-                  update={updateRadioButtonsValue}
-                />
-                <CarouselRatioButtonInput
-                  title={"Header"}
-                  description={"Choose an option below to configure media type"}
-                  option1={"Image"}
-                  option2={"Video"}
-                  fieldKey={"headerType"}
-                  value={radioButtonsValue.headerType}
-                  update={updateRadioButtonsValue}
-                />
-              </>
+            {selectedTemplateType.value === "standard" && (
+              <TemplateStandardCard
+                body={standardBody}
+                setBody={setStandardBody}
+                actionButtons={standardActionButtons}
+                setActionButtons={setStandardActionButtons}
+              />
             )}
 
-            {/* Call to Action/Reply Buttons Section */}
-            {/* {(selectedTemplateType.value === "standard" ||
-              selectedTemplateType.value === "rich") && (
-              <div className="space-y-1 gap-2">
-                <>
-                  <div className="flex items-center gap-2">
-                    <label className="block text-sm font-semibold text-slate-700">
-                      Call to Action/Reply Buttons
-                    </label>
-                    <span className="rounded-md bg-teal-100 px-2.5 py-0.5 text-xs font-medium text-teal-600">
-                      Optional
-                    </span>
-                  </div>
-                  <p className="text-xs text-slate-500">
-                    Create a Call to Action or Reply Buttons that let customers
-                    respond to your message or take action. You can add upto{" "}
-                    {numberOfButtons}
-                    buttons
-                  </p>
-                </>
-                {actionButtons.map((btn, index) => {
-                  return (
-                    <AddBtnCard
-                      key={index}
-                      index={index}
-                      selectedAction={btn.selectedAction}
-                      countryCode={btn.countryCode}
-                      phoneNumber={btn.phoneNumber}
-                      url={btn.url}
-                      urlMode={btn.urlMode}
-                      text={btn.text}
-                      label={btn.label}
-                      latitude={btn.latitude}
-                      longitude={btn.longitude}
-                      onClose={() => {
-                        setActionButtons((prev) =>
-                          prev.filter((_, i) => i !== index),
-                        );
-                      }}
-                      onUpdate={updateBtnContent}
-                      query={btn.query}
-                      endDate={btn.endDate}
-                      startDate={btn.startDate}
-                      title={btn.title}
-                      description={btn.description}
-                    />
-                  );
-                })}
-                <div className="pt-1">
-                  <button
-                    className="flex items-center gap-1.5 rounded-lg border border-slate-200
-                 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm 
-                 hover:bg-slate-50 hover:border-blue-500 hover:text-blue-600
-                  transition-all"
-                    onClick={() => {
-                      if (
-                        selectedTemplateType.value === "standard" &&
-                        actionButtons.length <= numberOfButtons
-                      ) {
-                        addNewButton();
-                      } else if (
-                        selectedTemplateType.value !== "rich" &&
-                        actionButtons.length <= numberOfButtons
-                      ) {
-                        addNewButton();
-                      } else {
-                        toast.info("You exceeded the limit of buttons", {
-                          position: "top-center",
-                        });
-                      }
-                    }}
-                  >
-                    <span className="text-base">+</span>
-                    Add Button
-                  </button>
-                </div>
-              </div>
-            )} */}
+            {selectedTemplateType.value === "rich" && (
+              <TemplateRichCard
+                richCard={richCard}
+                addButtons={addRichCardButton}
+                removeButtons={removeRichCardButton}
+                updateBtnContent={updateRichCardButtonContent}
+                updateContent={updateRichCardContent}
+              />
+            )}
 
             {/* EXTRA SPACING FOR SCROLL DEMONSTRATION */}
             <div className="h-20"></div>
@@ -527,8 +444,8 @@ const CreateTemplates = () => {
         </div>
 
         {/* RIGHT PANEL - PREVIEW (FIXED/NON-SCROLLABLE) */}
-        <div className="lg:col-span-4">
-          <div className="sticky top-0 rounded-xl border border-slate-200 bg-white shadow-sm ring-1 ring-slate-900/5 p-3">
+        <div className="lg:col-span-4 h-full">
+          <div className="sticky top-0 rounded-xl border border-slate-200 bg-white shadow-sm ring-1 ring-slate-900/5 p-3 h-full flex flex-col">
             <h2 className="text-lg font-semibold text-slate-900 mb-4">
               Preview
             </h2>
@@ -562,45 +479,123 @@ const CreateTemplates = () => {
 
             {selectedTemplateType.value === "rich" && (
               <>
-                {/* RCS Card Preview Mock - Total height = Image width */}
-                <div className="rounded-xl border border-slate-300 bg-white shadow-lg overflow-hidden">
-                  {/* Top Media Block - 3:1 Aspect Ratio (1440x480) */}
-                  <div
-                    className="relative w-full bg-slate-200"
-                    style={{ aspectRatio: "3/1" }}
-                  >
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="text-center">
-                        <svg
-                          className="h-12 w-12 text-slate-400 mx-auto mb-2"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
+                {/* Conditional Layout based on heightAlignment */}
+                {richCard.heightAlignment === "Left" ||
+                richCard.heightAlignment === "Right" ? (
+                  <>
+                    {/* Horizontal Layout - Image on Left or Right */}
+                    <div className="w-full" style={{ aspectRatio: "1/1" }}>
+                      <div
+                        className={`h-full rounded-xl border border-slate-300 bg-white shadow-lg overflow-hidden flex ${richCard.heightAlignment === "Right" ? "flex-row-reverse" : ""}`}
+                      >
+                        {/* Image Block - Portrait 768x1024 */}
+                        <div
+                          className="relative bg-slate-200 flex-shrink-0"
+                          style={{ width: "40%", height: "100%" }}
                         >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={1.5}
-                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                          />
-                        </svg>
-                        <p className="text-xs text-slate-500">1440 × 480</p>
+                          {richCard.uploadedImage ? (
+                            <img
+                              className="w-full h-full"
+                              src={URL.createObjectURL(richCard.uploadedImage)}
+                              alt=""
+                            />
+                          ) : (
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <div className="text-center">
+                                <svg
+                                  className="h-10 w-10 text-slate-400 mx-auto mb-2"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={1.5}
+                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                  />
+                                </svg>
+                                <p className="text-[10px] text-slate-500">
+                                  768 × 1024
+                                </p>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Content Block */}
+                        <div className="flex-1 bg-slate-50 p-2 flex flex-col">
+                          <p>Hello Mr Pritam Bala What are you doing here</p>
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Bottom Content Block - Height is 2/3 of width (so total card height = width) */}
-                  <div
-                    className="relative w-full bg-slate-50"
-                    style={{ aspectRatio: "3/2" }}
-                  >
-                    {/* Blank area for content */}
-                  </div>
-                </div>
+                    <p className="mt-4 text-xs text-center text-slate-500">
+                      Rich media card preview - {richCard.heightAlignment}{" "}
+                      aligned (768×1024)
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    {/* Vertical Layout - Image on Top (Short/Medium) */}
+                    <div className="w-full" style={{ aspectRatio: "1/1" }}>
+                      <div className="h-full rounded-xl border border-slate-300 bg-white shadow-lg overflow-hidden flex flex-col">
+                        {/* Top Media Block - 3:1 or 2:1 Aspect Ratio */}
+                        <div
+                          className="relative w-full bg-slate-200"
+                          style={{
+                            height:
+                              richCard.heightAlignment === "Short"
+                                ? "33.33%"
+                                : "50%",
+                          }}
+                        >
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            {richCard.uploadedImage ? (
+                              <img
+                                className="w-full h-full"
+                                src={URL.createObjectURL(
+                                  richCard.uploadedImage,
+                                )}
+                                alt=""
+                              />
+                            ) : (
+                              <div className="text-center">
+                                <svg
+                                  className="h-12 w-12 text-slate-400 mx-auto mb-2"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={1.5}
+                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                  />
+                                </svg>
+                                <p className="text-xs text-slate-500">
+                                  {richCard.imageWidth} × {richCard.imageHeight}
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        </div>
 
-                <p className="mt-4 text-xs text-center text-slate-500">
-                  Rich media card preview (1440×480)
-                </p>
+                        {/* Bottom Content Block */}
+                        <div className="flex-1 relative w-full bg-slate-50 p-2">
+                          {/* Blank area for content */}
+                          <p>Hello Mr Pritam Bala What Are you doing </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <p className="mt-4 text-xs text-center text-slate-500">
+                      Rich media card preview - {richCard.heightAlignment} (
+                      {richCard.imageWidth}×{richCard.imageHeight})
+                    </p>
+                  </>
+                )}
               </>
             )}
           </div>
