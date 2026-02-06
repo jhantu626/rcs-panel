@@ -293,8 +293,8 @@ const CreateTemplates = () => {
             Cancel
           </button>
           <button
-            className="flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5
-           text-sm font-semibold text-white shadow-lg shadow-blue-600/30 hover:bg-blue-700
+            className="flex items-center gap-2 rounded-lg bg-pink-600 px-5 py-2.5
+           text-sm font-semibold text-white shadow-lg shadow-pink-600/30 hover:bg-pink-700
             hover:scale-[1.01] active:scale-[0.98] transition-all"
             onClick={handleSubmit}
           >
@@ -538,7 +538,10 @@ const CreateTemplates = () => {
                 ) : (
                   <>
                     {/* Vertical Layout - Image on Top (Short/Medium) */}
-                    <div className="w-full" style={{ aspectRatio: "1/1" }}>
+                    <div
+                      className="w-full max-w-md mx-auto"
+                      style={{ aspectRatio: "1/1" }}
+                    >
                       <div className="h-full rounded-xl border border-slate-300 bg-white shadow-lg overflow-hidden flex flex-col">
                         {/* Top Media Block - 3:1 or 2:1 Aspect Ratio */}
                         <div
@@ -550,16 +553,14 @@ const CreateTemplates = () => {
                                 : "50%",
                           }}
                         >
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            {richCard.uploadedImage ? (
-                              <img
-                                className="w-full h-full"
-                                src={URL.createObjectURL(
-                                  richCard.uploadedImage,
-                                )}
-                                alt=""
-                              />
-                            ) : (
+                          {richCard.uploadedImage ? (
+                            <img
+                              className="w-full h-full"
+                              src={URL.createObjectURL(richCard.uploadedImage)}
+                              alt=""
+                            />
+                          ) : (
+                            <div className="absolute inset-0 flex items-center justify-center">
                               <div className="text-center">
                                 <svg
                                   className="h-12 w-12 text-slate-400 mx-auto mb-2"
@@ -578,14 +579,40 @@ const CreateTemplates = () => {
                                   {richCard.imageWidth} × {richCard.imageHeight}
                                 </p>
                               </div>
-                            )}
-                          </div>
+                            </div>
+                          )}
                         </div>
 
                         {/* Bottom Content Block */}
-                        <div className="flex-1 relative w-full bg-slate-50 p-2">
-                          {/* Blank area for content */}
-                          <p>Hello Mr Pritam Bala What Are you doing </p>
+                        <div
+                          className="flex-1 relative w-full bg-slate-50 p-2 overflow-auto max-h-[400px]
+                         [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent 
+                         [&::-webkit-scrollbar-thumb]:bg-pink-200 [&::-webkit-scrollbar-thumb]:rounded-full 
+                         [&::-webkit-scrollbar-thumb]:hover:bg-pink-300"
+                        >
+                          {/* Title */}
+                          <p className="font-bold text-black text-sm">
+                            {richCard.title}
+                          </p>
+                          <p className="text-sm text-gray-500 font-[500] py-4">
+                            {richCard.body}
+                          </p>
+                          {richCard.buttons.map((item, index) => {
+                            return (
+                              <div
+                                key={index}
+                                className="my-2 flex items-center justify-center gap-2"
+                              >
+                                <span className="flex items-center">
+                                  {item?.selectedAction?.icon}
+                                </span>
+
+                                <p className="text-[14px] font-bold text-blue-600">
+                                  {item.text}
+                                </p>
+                              </div>
+                            );
+                          })}
                         </div>
                       </div>
                     </div>

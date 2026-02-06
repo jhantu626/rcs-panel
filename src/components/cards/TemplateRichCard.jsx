@@ -146,7 +146,7 @@ const TemplateRichCard = ({
           />
           <div className="absolute bottom-3 right-3 pointer-events-none">
             <span className="text-xs text-slate-400">
-              {richCard.body.length}/2500
+              {richCard.body.length}/2000
             </span>
           </div>
         </div>
@@ -158,7 +158,7 @@ const TemplateRichCard = ({
             onClick={() => {
               const newText = `[custom_param_desc_${bodyVarCount}]`;
 
-              if (richCard.body.length + newText.length <= 2500) {
+              if (richCard.body.length + newText.length <= 2000) {
                 updateContent("body", richCard.body + newText);
                 setBodyVarCount((prev) => prev + 1);
               }
@@ -180,7 +180,7 @@ const TemplateRichCard = ({
           </div>
           <p className="text-xs text-slate-500">
             Create a Call to Action or Reply Buttons that let customers respond
-            to your message or take action. You can add upto 11 buttons
+            to your message or take action. You can add upto 4 buttons
           </p>
         </>
         {richCard?.buttons?.map((btn, index) => {
