@@ -92,7 +92,7 @@ const Sidebar = () => {
       <div className="h-16 flex items-center px-6 border-b border-gray-50">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white shrink-0">
-            <img src="./public/images/logo/logo.png" alt="Logo" />
+            <img src="./images/logo/logo.png" alt="Logo" />
           </div>
           {!collapsed && (
             <span className="font-bold text-xl text-gray-800 tracking-tight">
