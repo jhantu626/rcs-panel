@@ -525,7 +525,29 @@ const CreateTemplates = () => {
 
                         {/* Content Block */}
                         <div className="flex-1 bg-slate-50 p-2 flex flex-col">
-                          <p>Hello Mr Pritam Bala What are you doing here</p>
+                         {/* Title */}
+                          <p className="font-bold text-black text-sm">
+                            {richCard.title}
+                          </p>
+                          <p className="text-sm text-gray-500 font-[500] py-4">
+                            {richCard.body}
+                          </p>
+                          {richCard.buttons.map((item, index) => {
+                            return (
+                              <div
+                                key={index}
+                                className="my-2 flex items-center justify-center gap-2"
+                              >
+                                <span className="flex items-center">
+                                  {item?.selectedAction?.icon}
+                                </span>
+
+                                <p className="text-[14px] font-bold text-blue-600">
+                                  {item.text}
+                                </p>
+                              </div>
+                            );
+                          })}
                         </div>
                       </div>
                     </div>
