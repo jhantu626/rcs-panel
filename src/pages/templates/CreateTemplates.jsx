@@ -123,6 +123,7 @@ const CreateTemplates = () => {
     title: "",
     body: "",
     uploadedImage: null,
+    uploadedVideo: null,
     buttons: [],
   });
 

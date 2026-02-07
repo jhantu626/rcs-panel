@@ -97,6 +97,50 @@ const TemplateRichCard = ({
         />
       )}
 
+      {richCard.headerType === "Video" && (
+        <>
+          <FileUploadInput
+            label="Upload Video"
+            subtitle={`The video you specify must have a max file size of 5
+         MB, have a resolution of ${richCard.imageWidth} x ${richCard.imageHeight} pixels and should be a MP4.`}
+            accept="video/mp4"
+            fileName={richCard.uploadedVideo?.name}
+            onChange={(file) => {
+              const size = file.size / (1024 * 1024);
+
+              if (size > 5) {
+                toast.error("File size must be less than 5MB", {
+                  position: "top-center",
+                });
+                return;
+              }
+
+              const video = document.createElement("video");
+
+              video.preload = "metadata";
+
+              video.onloadedmetadata = () => {
+                console.log(video.videoHeight, video.videoWidth);
+                if (
+                  video.videoWidth !== richCard.imageWidth ||
+                  video.videoHeight !== richCard.imageHeight
+                ) {
+                  toast.error(
+                    `Video resolution must be ${richCard.imageWidth} x ${richCard.imageHeight}`,
+                    {
+                      position: "top-center",
+                    },
+                  );
+                  return;
+                }
+                updateContent("uploadedVideo", file);
+              };
+              video.src = URL.createObjectURL(file);
+            }}
+          />
+        </>
+      )}
+
       <ButtonNormalnput
         label="Title"
         subtitle="Add a title for your card"
