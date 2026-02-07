@@ -138,6 +138,45 @@ const TemplateRichCard = ({
               video.src = URL.createObjectURL(file);
             }}
           />
+          <FileUploadInput
+            label="Video Thumbnail"
+            subtitle={`The thumbnail you specify must have a max file size of 100KB, have a resolution of ${richCard.videoThumbnailSize.width} x ${richCard.videoThumbnailSize.height} pixels and should be a JPEG, JPG, PNG.`}
+            accept="image/jpeg,image/jpg,image/png"
+            fileName={richCard.videoThumbnail?.name}
+            onChange={(file) => {
+              console.log("Selected file:", file);
+              // You can handle the file upload here
+              const size = file.size / (1024 * 1024);
+
+              if (size > 0.1) {
+                toast.error("File size must be less than 100KB", {
+                  position: "top-center",
+                });
+                return;
+              }
+
+              const image = new Image();
+
+              image.onload = () => {
+                console.log(image.width, image.height);
+                if (
+                  image.width !== richCard.videoThumbnailSize.width ||
+                  image.height !== richCard.videoThumbnailSize.height
+                ) {
+                  toast.error(
+                    `Image resolution must be ${richCard.videoThumbnailSize.width} x ${richCard.videoThumbnailSize.height}`,
+                    {
+                      position: "top-center",
+                    },
+                  );
+                  return;
+                }
+                updateContent("videoThumbnail", file);
+              };
+
+              image.src = URL.createObjectURL(file);
+            }}
+          />
         </>
       )}
 

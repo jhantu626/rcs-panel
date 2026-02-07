@@ -124,6 +124,11 @@ const CreateTemplates = () => {
     body: "",
     uploadedImage: null,
     uploadedVideo: null,
+    videoThumbnail: null,
+    videoThumbnailSize: {
+      width: 1440,
+      height: 480,
+    },
     buttons: [],
   });
 
@@ -213,6 +218,11 @@ const CreateTemplates = () => {
             imageWidth: 1440,
             imageHeight: 480,
             uploadedImage: null,
+            videoThumbnail: null,
+            videoThumbnailSize: {
+              width: 1440,
+              height: 480,
+            },
           };
         } else {
           return {
@@ -221,6 +231,11 @@ const CreateTemplates = () => {
             imageWidth: 768,
             imageHeight: 1024,
             uploadedImage: null,
+            videoThumbnail: null,
+            videoThumbnailSize: {
+              width: 1000,
+              height: 1320,
+            },
           };
         }
       });
@@ -235,6 +250,11 @@ const CreateTemplates = () => {
               imageWidth: 1440,
               imageHeight: 480,
               uploadedImage: null,
+              videoThumbnail: null,
+              videoThumbnailSize: {
+                width: 1440,
+                height: 480,
+              },
             };
           });
           break;
@@ -245,6 +265,11 @@ const CreateTemplates = () => {
               imageWidth: 1440,
               imageHeight: 720,
               uploadedImage: null,
+              videoThumbnail: null,
+              videoThumbnailSize: {
+                width: 980,
+                height: 420,
+              },
             };
           });
           break;
@@ -254,6 +279,10 @@ const CreateTemplates = () => {
               ...prev,
               imageWidth: 768,
               imageHeight: 1024,
+              videoThumbnailSize: {
+                width: 1000,
+                height: 1320,
+              },
             };
           });
           break;
@@ -263,6 +292,10 @@ const CreateTemplates = () => {
               ...prev,
               imageWidth: 768,
               imageHeight: 1024,
+              videoThumbnailSize: {
+                width: 1000,
+                height: 1320,
+              },
             };
           });
           break;
@@ -494,10 +527,22 @@ const CreateTemplates = () => {
                           className="relative bg-slate-200 flex-shrink-0"
                           style={{ width: "40%", height: "100%" }}
                         >
-                          {richCard.uploadedImage ? (
+                          {(
+                            richCard.headerType === "Image"
+                              ? richCard.uploadedImage
+                              : richCard.videoThumbnail
+                          ) ? (
                             <img
                               className="w-full h-full"
-                              src={URL.createObjectURL(richCard.uploadedImage)}
+                              src={
+                                richCard.headerType === "Image"
+                                  ? URL.createObjectURL(richCard.uploadedImage)
+                                  : richCard.videoThumbnail
+                                    ? URL.createObjectURL(
+                                        richCard.videoThumbnail,
+                                      )
+                                    : ""
+                              }
                               alt=""
                             />
                           ) : (
@@ -579,10 +624,22 @@ const CreateTemplates = () => {
                                 : "50%",
                           }}
                         >
-                          {richCard.uploadedImage ? (
+                          {(
+                            richCard.headerType === "Image"
+                              ? richCard.uploadedImage
+                              : richCard.videoThumbnail
+                          ) ? (
                             <img
                               className="w-full h-full"
-                              src={URL.createObjectURL(richCard.uploadedImage)}
+                              src={
+                                richCard.headerType === "Image"
+                                  ? URL.createObjectURL(richCard.uploadedImage)
+                                  : richCard.videoThumbnail
+                                    ? URL.createObjectURL(
+                                        richCard.videoThumbnail,
+                                      )
+                                    : ""
+                              }
                               alt=""
                             />
                           ) : (
