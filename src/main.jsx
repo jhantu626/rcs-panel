@@ -8,7 +8,13 @@ import {
   Route,
   RouterProvider,
 } from "react-router";
-import { CreateTemplates, Dashboard, NotFound, Templetes } from "./pages";
+import {
+  CreateTemplates,
+  Dashboard,
+  Login,
+  NotFound,
+  Templetes,
+} from "./pages";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -16,6 +22,7 @@ const router = createBrowserRouter(
       <Route path="/" element={<Dashboard />} />
       <Route path="/templates" element={<Templetes />} />
       <Route path="/create-templates" element={<CreateTemplates />} />
+      <Route path="/login" element={<Login />} />
       <Route path="*" element={<NotFound />} />
     </Route>,
   ),

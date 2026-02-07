@@ -307,6 +307,8 @@ const CreateTemplates = () => {
     if (selectedTemplateType.value === "standard") {
       console.log(standardBody);
       console.log(standardActionButtons);
+    }else if (selectedTemplateType.value === "rich") {
+      console.log(richCard);
     }
   };
 

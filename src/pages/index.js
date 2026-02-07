@@ -6,4 +6,8 @@ import CreateTemplates from "./templates/CreateTemplates";
 
 import NotFound from "./NotFound";
 
-export { Dashboard, Templetes, CreateTemplates, NotFound };
+
+// unauth pages
+import Login from "./Login";
+
+export { Dashboard, Templetes, CreateTemplates, NotFound, Login };
