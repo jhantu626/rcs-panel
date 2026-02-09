@@ -3,7 +3,7 @@ import { API_URL } from "../config/config";
 
 class UserService {
   constructor() {
-    this.baseURL = `${API_URL}/user`;
+    this.baseURL = `${API_URL}user`;
   }
 
   async profile(token) {

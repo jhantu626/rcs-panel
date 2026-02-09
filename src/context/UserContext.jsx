@@ -1,10 +1,13 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { userService } from "./../services/UserService";
+import { useAuth } from "./AuthContext";
 
 const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
+  const token = useAuth("authToken");
   const [user, setUser] = useState(
-    JSON.parse(JSON.parse(localStorage.getItem("user"))) || null,
+    JSON.parse(localStorage.getItem("user") || null),
   );
 
   const setUsers = (user) => {
@@ -12,18 +15,22 @@ const UserProvider = ({ children }) => {
     localStorage.setItem("user", JSON.stringify(user));
   };
 
-  const checkUser = () => {
-    if(!user){
-        console.log("User Not Found")
+  const getUser = async () => {
+    if (!user) {
+      console.log("token", token);
+      try {
+        const dbUser = await userService.profile(token);
+        setUsers(dbUser);
+        localStorage.setItem("user", JSON.stringify(dbUser));
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
-  const getUser=async()=>{
-  }
-
   useEffect(() => {
-    checkUser();
-  }, []);
+    getUser();
+  }, [token]);
 
   return (
     <UserContext.Provider value={{ user, setUsers }}>

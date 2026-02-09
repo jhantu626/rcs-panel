@@ -8,7 +8,7 @@ const AuthProvider = ({ children }) => {
   const [role, setRole] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const login = ({ token }) => {
+  const login = (token) => {
     setAuthToken(token);
     localStorage.setItem("token", token);
   };

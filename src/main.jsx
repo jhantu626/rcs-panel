@@ -19,6 +19,7 @@ import { AuthProvider } from "./context/AuthContext.jsx";
 import ProtectedRoute from "./pages/ProtectedRoute.jsx";
 import PublicRoute from "./pages/PublicRoute.jsx";
 import DashboardLayout from "./components/layout/DashboardLayout.jsx";
+import { UserProvider } from "./context/UserContext.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -43,6 +44,8 @@ const router = createBrowserRouter(
 
 createRoot(document.getElementById("root")).render(
   <AuthProvider>
-    <RouterProvider router={router} />
+    <UserProvider>
+      <RouterProvider router={router} />
+    </UserProvider>
   </AuthProvider>,
 );

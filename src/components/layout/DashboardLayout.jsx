@@ -6,7 +6,6 @@ import { UserProvider } from "../../context/UserContext";
 
 const DashboardLayout = () => {
   return (
-    <UserProvider>
       <div className="flex h-screen bg-gray-50 overflow-hidden font-sans">
         <Sidebar />
         <div className="flex-1 flex flex-col h-full overflow-hidden relative">
@@ -18,7 +17,6 @@ const DashboardLayout = () => {
           </main>
         </div>
       </div>
-    </UserProvider>
   );
 };
 
