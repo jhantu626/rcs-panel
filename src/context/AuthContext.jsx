@@ -8,24 +8,15 @@ const AuthProvider = ({ children }) => {
   const [role, setRole] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const login = async ({ username, password }) => {
-    try {
-      const data = await authService.login(username, password);
-      if (data.status) {
-        setAuthToken(data.token);
-        localStorage.setItem("token", data.token);
-        return true;
-      }
-      return false;
-    } catch (error) {
-      return false;
-    }
+  const login = ({ token }) => {
+    setAuthToken(token);
+    localStorage.setItem("token", token);
   };
 
-  const logout = async () => {
+  const logout = () => {
     try {
       setAuthToken(null);
-      await localStorage.clear();
+      localStorage.clear();
       return true;
     } catch (error) {
       return false;
