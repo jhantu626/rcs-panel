@@ -1,6 +1,53 @@
-import React from "react";
+import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
+import { toast } from "react-toastify";
+import { authService } from "./../services/AuthService";
+import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
+  const login = useAuth("login");
+
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
+
+  //LOADING STATE
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async () => {
+    if (!userName) {
+      toast.error("Please enter username", {
+        position: "top-center",
+      });
+      return;
+    }
+    if (!password) {
+      toast.error("Please enter password", {
+        position: "top-center",
+      });
+      return;
+    }
+    setIsLoading(true);
+    try {
+      console.log(userName, password);
+      const data = await authService.login(userName, password);
+      if (data.status) {
+        setError("");
+        console.log(data);
+        login(data.token);
+      } else {
+        toast.error(data.message, {
+          position: "top-center",
+        });
+        setError(data.message);
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col lg:flex-row">
@@ -36,10 +83,10 @@ const Login = () => {
               </p>
               <div className="space-y-1">
                 <p className="text-sm sm:text-base lg:text-lg font-semibold">
-                  Karen Yue
+                  Tarun Karan
                 </p>
                 <p className="text-xs sm:text-sm lg:text-base text-pink-200 font-light">
-                  Director of Digital Marketing Technology
+                  Director of Turain Software Private Limited
                 </p>
               </div>
             </div>
@@ -48,16 +95,16 @@ const Login = () => {
       </div>
 
       {/* RIGHT PANEL - Form Section */}
-      <div className="flex-1 flex items-center justify-center p-4 sm:p-6 md:p-8 lg:p-12 xl:p-16 bg-gradient-to-br from-gray-50 to-gray-100/50">
+      <div className="flex-1 flex items-center justify-center p-6 sm:p-8 md:p-12 lg:p-16 bg-white">
         <div className="w-full max-w-md">
-          {/* Login Card */}
-          <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 sm:p-10 lg:p-12 space-y-8 sm:space-y-10 backdrop-blur-sm">
+          {/* Login Form */}
+          <div className="space-y-8 sm:space-y-10">
             {/* Header */}
-            <div className="space-y-3 text-center">
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 tracking-tight">
+            <div className="space-y-3">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 tracking-tight">
                 Welcome Back
               </h2>
-              <p className="text-sm sm:text-base text-gray-600 font-light leading-relaxed">
+              <p className="text-base sm:text-lg text-gray-500 font-light leading-relaxed">
                 Sign in to access your account
               </p>
             </div>
@@ -68,15 +115,19 @@ const Login = () => {
               <div className="space-y-2.5">
                 <label
                   htmlFor="username"
-                  className="block text-sm font-semibold text-gray-800 tracking-wide"
+                  className="block text-sm font-medium text-gray-700"
                 >
                   Username
                 </label>
                 <input
+                  value={userName}
+                  onChange={(e) => {
+                    setUserName(e.target.value);
+                  }}
                   type="text"
                   id="username"
                   placeholder="Enter your username"
-                  className="w-full px-4 py-3.5 bg-gray-50 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 focus:bg-white outline-none transition-all duration-300 hover:border-gray-300 placeholder:text-gray-400 text-gray-900"
+                  className="w-full px-4 py-4 bg-transparent border-b-2 border-gray-200 focus:border-pink-500 outline-none transition-all duration-300 placeholder:text-gray-400 text-gray-900 font-medium"
                 />
               </div>
 
@@ -84,21 +135,50 @@ const Login = () => {
               <div className="space-y-2.5">
                 <label
                   htmlFor="password"
-                  className="block text-sm font-semibold text-gray-800 tracking-wide"
+                  className="block text-sm font-medium text-gray-700"
                 >
                   Password
                 </label>
-                <input
-                  type="password"
-                  id="password"
-                  placeholder="Enter your password"
-                  className="w-full px-4 py-3.5 bg-gray-50 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 focus:bg-white outline-none transition-all duration-300 hover:border-gray-300 placeholder:text-gray-400 text-gray-900"
-                />
+                <div className="relative">
+                  <input
+                    value={password}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                    }}
+                    type={showPassword ? "text" : "password"}
+                    id="password"
+                    placeholder="Enter your password"
+                    className="w-full px-4 py-4 pr-12 bg-transparent border-b-2 border-gray-200 focus:border-pink-500 outline-none transition-all duration-300 placeholder:text-gray-400 text-gray-900 font-medium"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 p-2 text-gray-500 hover:text-gray-700 focus:outline-none focus:text-pink-600 transition-colors duration-200"
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
+                  >
+                    {showPassword ? (
+                      <EyeOff className="w-5 h-5" />
+                    ) : (
+                      <Eye className="w-5 h-5" />
+                    )}
+                  </button>
+                </div>
+                <p className="text-red-500">{error}</p>
               </div>
 
               {/* Login Button */}
-              <button className="w-full mt-2 bg-gradient-to-r from-pink-600 to-rose-600 text-white py-4 px-6 rounded-xl font-semibold text-base hover:from-pink-700 hover:to-rose-700 focus:ring-4 focus:ring-pink-300 focus:ring-opacity-50 active:scale-[0.98] transition-all duration-200 shadow-lg shadow-pink-500/30 hover:shadow-xl hover:shadow-pink-500/40">
-                Log in
+              <button
+                className="w-full mt-8 bg-gradient-to-r from-pink-600 to-rose-600 text-white
+               py-4 px-6 rounded-lg font-semibold text-base hover:from-pink-700 hover:to-rose-700 
+               focus:ring-4 focus:ring-pink-300 focus:ring-opacity-50 active:scale-[0.98] 
+               transition-all duration-200 shadow-md shadow-pink-500/20 hover:shadow-lg
+                hover:shadow-pink-500/30"
+                onClick={handleSubmit}
+                disabled={isLoading}
+              >
+                {isLoading ? "Logging in..." : "Log in"}
               </button>
             </div>
           </div>
