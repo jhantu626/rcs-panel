@@ -10,5 +10,14 @@ const validateName = (name) => {
   return nameRegex.test(name);
 };
 
+const validateEmail = (email) => {
+  if (typeof email !== "string") return false;
 
-export {validateName}
+  email = email.trim();
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  return emailRegex.test(email);
+};
+
+export { validateName, validateEmail };
