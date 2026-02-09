@@ -10,6 +10,7 @@ import {
   FileText,
   Wrench,
   Download,
+  User,
 } from "lucide-react";
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -53,6 +54,7 @@ const Sidebar = () => {
     { icon: Wrench, label: "Utilities", path: "/utilites" },
     { icon: Download, label: "Downloads", path: "/downloads" },
     { icon: Users, label: "Audience", path: "/audience" },
+    role === "ADMIN" && { icon: User, label: "Users", path: "/users" },
   ];
 
   const toggleSubmenu = (path) => {
