@@ -36,12 +36,10 @@ const AuthProvider = ({ children }) => {
     try {
       const token = localStorage.getItem("token");
       const role = localStorage.getItem("role");
-      // if (!token) {
-      //   setAuthToken(null);
-      //   setRole(role);
-      //   return;
-      // }
-      setAuthToken("token");
+      if (!token) {
+        return;
+      }
+      setAuthToken(token);
       setRole(role);
     } catch (error) {
       console.log(error);

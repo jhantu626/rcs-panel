@@ -1,6 +1,7 @@
 import React from "react";
 
 const Login = () => {
+
   return (
     <div className="min-h-screen flex flex-col lg:flex-row">
       {/* LEFT PANEL - Image Section */}

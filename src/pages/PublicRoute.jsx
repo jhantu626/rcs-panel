@@ -1,7 +1,7 @@
-import { Navigate } from "react-router";
+import { Navigate, Outlet } from "react-router";
 import { useAuth } from "../context/AuthContext";
 
-const PublicRoute = ({ children }) => {
+const PublicRoute = () => {
   const authToken = useAuth("authToken");
   const isLoading = useAuth("loading");
 
@@ -9,13 +9,11 @@ const PublicRoute = ({ children }) => {
     return <div>Loading...</div>;
   }
 
-  // If user is already authenticated, redirect to dashboard
   if (authToken) {
     return <Navigate to="/" replace />;
   }
 
-  // If not authenticated, show the public page (login)
-  return children;
+  return <Outlet />;
 };
 
 export default PublicRoute;

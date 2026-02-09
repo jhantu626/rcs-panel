@@ -23,9 +23,12 @@ import DashboardLayout from "./components/layout/DashboardLayout.jsx";
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
+      {/* //Public Route */}
       <Route element={<PublicRoute />}>
         <Route path="/login" element={<Login />} />
       </Route>
+
+      {/* //Protected Route */}
       <Route element={<ProtectedRoute />}>
         <Route element={<DashboardLayout />}>
           <Route path="/" element={<Dashboard />} />
