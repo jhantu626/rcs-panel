@@ -13,4 +13,12 @@ import AddUser from "./Users/AddUser";
 // unauth pages
 import Login from "./Login";
 
-export { Dashboard, Templetes, CreateTemplates, NotFound, Login, Users };
+export {
+  Dashboard,
+  Templetes,
+  CreateTemplates,
+  NotFound,
+  Login,
+  Users,
+  AddUser,
+};
