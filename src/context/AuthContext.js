@@ -1,6 +1,12 @@
 import { authService } from "../services/AuthService";
 
-const { createContext, useState, useMemo, useEffect } = require("react");
+const {
+  createContext,
+  useState,
+  useMemo,
+  useEffect,
+  useContext,
+} = require("react");
 
 const AuthContext = createContext();
 
@@ -67,3 +73,11 @@ const AuthProvider = ({ children }) => {
 
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 };
+
+const useAuth = (attribute) => {
+  const auth = useContext(AuthContext);
+  if (!attribute) return auth;
+  return auth[attribute];
+};
+
+export { AuthProvider, useAuth };
