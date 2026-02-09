@@ -14,6 +14,7 @@ import {
   Login,
   NotFound,
   Templetes,
+  Users,
 } from "./pages";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import ProtectedRoute from "./pages/ProtectedRoute.jsx";
@@ -35,6 +36,7 @@ const router = createBrowserRouter(
           <Route path="/" element={<Dashboard />} />
           <Route path="/templates" element={<Templetes />} />
           <Route path="/create-templates" element={<CreateTemplates />} />
+          <Route path="/users" element={<Users />} />
         </Route>
       </Route>
       <Route path="*" element={<NotFound />} />
