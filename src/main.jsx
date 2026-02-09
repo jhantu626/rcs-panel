@@ -16,14 +16,17 @@ import {
   Templetes,
 } from "./pages";
 import { AuthProvider } from "./context/AuthContext.jsx";
+import ProtectedRoute from "./pages/ProtectedRoute.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
-      <Route path="/" element={<Dashboard />} />
-      <Route path="/templates" element={<Templetes />} />
-      <Route path="/create-templates" element={<CreateTemplates />} />
       <Route path="/login" element={<Login />} />
+      <Route element={<ProtectedRoute />}>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/templates" element={<Templetes />} />
+        <Route path="/create-templates" element={<CreateTemplates />} />
+      </Route>
       <Route path="*" element={<NotFound />} />
     </Route>,
   ),
