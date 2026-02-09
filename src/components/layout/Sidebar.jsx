@@ -15,10 +15,15 @@ import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router";
+import { useUser } from "../../context/UserContext";
 
 const cn = (...inputs) => twMerge(clsx(inputs));
 
 const Sidebar = () => {
+  const userName = useUser("userName");
+  const role = useUser("role");
+  const billingType = useUser("billingType");
+
   const [collapsed, setCollapsed] = useState(false);
   const [activePath, setActivePath] = useState("/dashboard");
   const [expandedMenus, setExpandedMenus] = useState(["/dashboard"]);
@@ -197,13 +202,13 @@ const Sidebar = () => {
         <div className="p-4 border-t border-gray-50">
           <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
             <div className="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center text-pink-700 font-bold">
-              JD
+              {userName.charAt(0).toUpperCase()}
             </div>
             <div className="flex flex-col">
               <span className="text-sm font-semibold text-gray-700">
-                John Doe
+                {userName}
               </span>
-              <span className="text-xs text-gray-400">john@donezo.com</span>
+              <span className="text-xs text-gray-400">{billingType}</span>
             </div>
           </div>
         </div>
