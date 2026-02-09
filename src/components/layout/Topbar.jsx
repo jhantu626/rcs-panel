@@ -38,7 +38,7 @@ const Topbar = () => {
 
         <button className="flex items-center gap-2 hover:bg-gray-50 p-1.5 rounded-full pr-3 transition-colors">
           <img
-            src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixlib=rb-1.2.1&auto=format&fit=crop&w=256&h=256&q=80"
+            src="./images/active-user.png"
             alt="Profile"
             className="w-8 h-8 rounded-full border-2 border-white shadow-sm object-cover"
           />
