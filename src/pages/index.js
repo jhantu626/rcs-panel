@@ -7,7 +7,8 @@ import CreateTemplates from "./templates/CreateTemplates";
 import NotFound from "./NotFound";
 
 // USERS
-import Users from "./Users";
+import Users from "./Users/Users";
+import AddUser from "./Users/AddUser";
 
 // unauth pages
 import Login from "./Login";
