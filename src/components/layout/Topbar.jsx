@@ -2,10 +2,13 @@ import React from "react";
 import { Search, Bell, MessageSquare, Menu } from "lucide-react";
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { useUser } from "../../context/UserContext";
 
 const cn = (...inputs) => twMerge(clsx(inputs));
 
 const Topbar = () => {
+  const userName = useUser("userName");
+  const role = useUser("role");
   return (
     <header className="h-16 bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-40 px-6 flex items-center justify-between">
       {/* Search Bar */}
@@ -44,10 +47,10 @@ const Topbar = () => {
           />
           <div className="flex flex-col items-start hidden sm:flex">
             <span className="text-sm font-semibold text-gray-700 leading-none">
-              Oliver S.
+              {userName}
             </span>
             <span className="text-[10px] text-gray-400 leading-none mt-1">
-              Admin
+              {role}
             </span>
           </div>
         </button>
