@@ -17,15 +17,18 @@ import {
 } from "./pages";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import ProtectedRoute from "./pages/ProtectedRoute.jsx";
+import DashboardLayout from "./components/layout/DashboardLayout.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
       <Route path="/login" element={<Login />} />
       <Route element={<ProtectedRoute />}>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/templates" element={<Templetes />} />
-        <Route path="/create-templates" element={<CreateTemplates />} />
+        <Route element={<DashboardLayout />}>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/templates" element={<Templetes />} />
+          <Route path="/create-templates" element={<CreateTemplates />} />
+        </Route>
       </Route>
       <Route path="*" element={<NotFound />} />
     </Route>,

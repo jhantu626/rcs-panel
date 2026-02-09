@@ -1,11 +1,5 @@
 import { authService } from "../services/AuthService";
-import {
-  createContext,
-  useState,
-  useMemo,
-  useEffect,
-  useContext,
-} from "react";
+import { createContext, useState, useMemo, useEffect, useContext } from "react";
 
 const AuthContext = createContext();
 
@@ -13,24 +7,6 @@ const AuthProvider = ({ children }) => {
   const [authToken, setAuthToken] = useState(null);
   const [role, setRole] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  const checkUser = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const role = localStorage.getItem("role");
-      if (!token) {
-        setAuthToken(null);
-        setRole(role);
-        return;
-      }
-      setAuthToken(token);
-      setRole(role);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const login = async ({ username, password }) => {
     try {
@@ -53,6 +29,24 @@ const AuthProvider = ({ children }) => {
       return true;
     } catch (error) {
       return false;
+    }
+  };
+
+  const checkUser = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const role = localStorage.getItem("role");
+      // if (!token) {
+      //   setAuthToken(null);
+      //   setRole(role);
+      //   return;
+      // }
+      setAuthToken("token");
+      setRole(role);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
