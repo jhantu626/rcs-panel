@@ -15,6 +15,7 @@ import {
   NotFound,
   Templetes,
 } from "./pages";
+import { AuthProvider } from "./context/AuthContext.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -29,7 +30,7 @@ const router = createBrowserRouter(
 );
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
+  <AuthProvider>
     <RouterProvider router={router} />
-  </StrictMode>,
+  </AuthProvider>,
 );
