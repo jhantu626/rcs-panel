@@ -9,6 +9,7 @@ import {
   RouterProvider,
 } from "react-router";
 import {
+  AddUser,
   CreateTemplates,
   Dashboard,
   Login,
@@ -37,6 +38,7 @@ const router = createBrowserRouter(
           <Route path="/templates" element={<Templetes />} />
           <Route path="/create-templates" element={<CreateTemplates />} />
           <Route path="/users" element={<Users />} />
+          <Route path="/add-user" element={<AddUser />} />
         </Route>
       </Route>
       <Route path="*" element={<NotFound />} />
