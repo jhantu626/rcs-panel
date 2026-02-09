@@ -3,12 +3,16 @@ import { API_URL } from "../config/config";
 
 class BotService {
   constructor() {
-    this.baseURL = `${API_URL}/bot`;
+    this.baseURL = `${API_URL}bot`;
   }
 
-  async getAllBots() {
+  async getAllBots(token) {
     try {
-      const response = await axios.get(this.baseURL);
+      const response = await axios.get(this.baseURL, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const data = await response.data;
       return data;
     } catch (error) {
@@ -18,7 +22,6 @@ class BotService {
   }
 }
 
-
 const botService = new BotService();
 
-export {botService}
+export { botService };
