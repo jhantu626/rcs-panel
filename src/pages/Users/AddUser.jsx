@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Eye, EyeOff, Info, ChevronDown, X } from "lucide-react";
+import { Eye, EyeOff, Info } from "lucide-react";
+import Select from "react-select";
 
 const AddUser = () => {
   // Form state
@@ -21,7 +22,6 @@ const AddUser = () => {
 
   // Reseller-specific state
   const [selectedChannels, setSelectedChannels] = useState([]);
-  const [showChannelDropdown, setShowChannelDropdown] = useState(false);
 
   // RCS Configuration state
   const [rcsConfig, setRcsConfig] = useState({
@@ -31,7 +31,39 @@ const AddUser = () => {
   });
 
   // Available channels
-  const availableChannels = ["RCS", "SMS", "WhatsApp", "Email"];
+  const channelOptions = [
+    { value: "RCS", label: "RCS" },
+    { value: "SMS", label: "SMS" },
+    { value: "WhatsApp", label: "WhatsApp" },
+    { value: "Email", label: "Email" },
+  ];
+
+  // Account type options
+  const accountTypeOptions = [
+    { value: "User", label: "User" },
+    { value: "Reseller", label: "Reseller" },
+    { value: "Admin", label: "Admin" },
+  ];
+
+  // Billing type options
+  const billingTypeOptions = [
+    { value: "Prepaid", label: "Prepaid" },
+    { value: "Postpaid", label: "Postpaid" },
+  ];
+
+  // Bot name options
+  const botNameOptions = [
+    { value: "Bot1", label: "Bot 1" },
+    { value: "Bot2", label: "Bot 2" },
+    { value: "Bot3", label: "Bot 3" },
+  ];
+
+  // Credit deduction options
+  const creditDeductionOptions = [
+    { value: "Submission", label: "Submission" },
+    { value: "Delivery", label: "Delivery" },
+    { value: "Read", label: "Read" },
+  ];
 
   // Handle input changes
   const handleInputChange = (field, value) => {
@@ -43,18 +75,87 @@ const AddUser = () => {
     setFormData((prev) => ({ ...prev, [field]: !prev[field] }));
   };
 
-  // Handle channel selection
-  const toggleChannel = (channel) => {
-    setSelectedChannels((prev) =>
-      prev.includes(channel)
-        ? prev.filter((c) => c !== channel)
-        : [...prev, channel],
-    );
-  };
-
-  // Remove channel
-  const removeChannel = (channel) => {
-    setSelectedChannels((prev) => prev.filter((c) => c !== channel));
+  // Custom styles for react-select
+  const customStyles = {
+    control: (base, state) => ({
+      ...base,
+      backgroundColor: state.isFocused ? "#fff" : "#f9fafb",
+      borderColor: "transparent",
+      borderRadius: "0.75rem",
+      padding: "0.125rem",
+      boxShadow: state.isFocused ? "0 0 0 2px rgba(236, 72, 153, 0.2)" : "none",
+      "&:hover": {
+        borderColor: "transparent",
+      },
+      minHeight: "42px",
+    }),
+    valueContainer: (base) => ({
+      ...base,
+      padding: "2px 12px",
+    }),
+    placeholder: (base) => ({
+      ...base,
+      color: "#9ca3af",
+      fontSize: "0.875rem",
+    }),
+    singleValue: (base) => ({
+      ...base,
+      color: "#374151",
+      fontSize: "0.875rem",
+    }),
+    multiValue: (base) => ({
+      ...base,
+      backgroundColor: "#fce7f3",
+      borderRadius: "0.5rem",
+    }),
+    multiValueLabel: (base) => ({
+      ...base,
+      color: "#be185d",
+      fontSize: "0.75rem",
+      fontWeight: "500",
+      padding: "4px 8px",
+    }),
+    multiValueRemove: (base) => ({
+      ...base,
+      color: "#be185d",
+      "&:hover": {
+        backgroundColor: "#fbcfe8",
+        color: "#9f1239",
+      },
+      borderRadius: "0 0.5rem 0.5rem 0",
+    }),
+    menu: (base) => ({
+      ...base,
+      borderRadius: "0.75rem",
+      marginTop: "0.5rem",
+      border: "1px solid #e5e7eb",
+      boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
+    }),
+    option: (base, state) => ({
+      ...base,
+      backgroundColor: state.isSelected
+        ? "#ec4899"
+        : state.isFocused
+          ? "#f9fafb"
+          : "white",
+      color: state.isSelected ? "white" : "#374151",
+      fontSize: "0.875rem",
+      padding: "10px 16px",
+      cursor: "pointer",
+      "&:active": {
+        backgroundColor: "#ec4899",
+      },
+    }),
+    indicatorSeparator: () => ({
+      display: "none",
+    }),
+    dropdownIndicator: (base) => ({
+      ...base,
+      color: "#9ca3af",
+      "&:hover": {
+        color: "#6b7280",
+      },
+    }),
   };
 
   // Check if form is valid (basic check for demo)
@@ -70,8 +171,8 @@ const AddUser = () => {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen p-6">
-      <div className="max-w-7xl mx-auto">
+    <div className="bg-gray-50 min-h-screen">
+      <div className="max-w-7xl">
         {/* Header Bar */}
         <div className="bg-gradient-to-r from-pink-500 to-pink-600 rounded-t-2xl px-6 py-4 shadow-lg shadow-pink-500/20">
           <h1 className="text-white text-2xl font-bold">Add User</h1>
@@ -126,24 +227,18 @@ const AddUser = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Account Type <span className="text-red-500">*</span>
                 </label>
-                <div className="relative">
-                  <select
-                    value={formData.accountType}
-                    onChange={(e) =>
-                      handleInputChange("accountType", e.target.value)
-                    }
-                    className="appearance-none w-full px-4 py-2.5 pr-10 bg-gray-50 border-none rounded-xl text-sm text-gray-700 focus:ring-2 focus:ring-pink-500/20 focus:bg-white transition-all outline-none cursor-pointer"
-                  >
-                    <option value="">Select User Type</option>
-                    <option value="User">User</option>
-                    <option value="Reseller">Reseller</option>
-                    <option value="Admin">Admin</option>
-                  </select>
-                  <ChevronDown
-                    size={16}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
-                  />
-                </div>
+                <Select
+                  options={accountTypeOptions}
+                  value={accountTypeOptions.find(
+                    (opt) => opt.value === formData.accountType,
+                  )}
+                  onChange={(option) =>
+                    handleInputChange("accountType", option?.value || "")
+                  }
+                  styles={customStyles}
+                  placeholder="Select User Type"
+                  isClearable
+                />
               </div>
             </div>
 
@@ -199,23 +294,18 @@ const AddUser = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Billing Type <span className="text-red-500">*</span>
                 </label>
-                <div className="relative">
-                  <select
-                    value={formData.billingType}
-                    onChange={(e) =>
-                      handleInputChange("billingType", e.target.value)
-                    }
-                    className="appearance-none w-full px-4 py-2.5 pr-10 bg-gray-50 border-none rounded-xl text-sm text-gray-700 focus:ring-2 focus:ring-pink-500/20 focus:bg-white transition-all outline-none cursor-pointer"
-                  >
-                    <option value="">Select Billing Type</option>
-                    <option value="Prepaid">Prepaid</option>
-                    <option value="Postpaid">Postpaid</option>
-                  </select>
-                  <ChevronDown
-                    size={16}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
-                  />
-                </div>
+                <Select
+                  options={billingTypeOptions}
+                  value={billingTypeOptions.find(
+                    (opt) => opt.value === formData.billingType,
+                  )}
+                  onChange={(option) =>
+                    handleInputChange("billingType", option?.value || "")
+                  }
+                  styles={customStyles}
+                  placeholder="Select Billing Type"
+                  isClearable
+                />
               </div>
 
               {/* Email */}
@@ -273,58 +363,19 @@ const AddUser = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Channels <span className="text-red-500">*</span>
                 </label>
-                <div className="relative">
-                  {/* Selected Channels Display */}
-                  <div
-                    onClick={() => setShowChannelDropdown(!showChannelDropdown)}
-                    className="w-full min-h-[42px] px-4 py-2 bg-gray-50 border-none rounded-xl text-sm focus:ring-2 focus:ring-pink-500/20 focus:bg-white transition-all outline-none cursor-pointer flex flex-wrap gap-2 items-center"
-                  >
-                    {selectedChannels.length > 0 ? (
-                      selectedChannels.map((channel) => (
-                        <span
-                          key={channel}
-                          className="inline-flex items-center gap-1 bg-pink-100 text-pink-700 px-3 py-1 rounded-lg text-xs font-medium"
-                        >
-                          {channel}
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              removeChannel(channel);
-                            }}
-                            className="hover:text-pink-900"
-                          >
-                            <X size={14} />
-                          </button>
-                        </span>
-                      ))
-                    ) : (
-                      <span className="text-gray-400">Select channels</span>
-                    )}
-                  </div>
-
-                  {/* Dropdown Options */}
-                  {showChannelDropdown && (
-                    <div className="absolute z-10 w-full mt-2 bg-white border border-gray-200 rounded-xl shadow-lg">
-                      {availableChannels.map((channel) => (
-                        <div
-                          key={channel}
-                          onClick={() => toggleChannel(channel)}
-                          className="px-4 py-2.5 hover:bg-gray-50 cursor-pointer flex items-center gap-2 transition-colors"
-                        >
-                          <input
-                            type="checkbox"
-                            checked={selectedChannels.includes(channel)}
-                            onChange={() => {}}
-                            className="w-4 h-4 rounded border-gray-300 text-pink-600 focus:ring-2 focus:ring-pink-500/20 cursor-pointer"
-                          />
-                          <span className="text-sm text-gray-700">
-                            {channel}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
+                <Select
+                  options={channelOptions}
+                  value={channelOptions.filter((opt) =>
+                    selectedChannels.includes(opt.value),
                   )}
-                </div>
+                  onChange={(selected) =>
+                    setSelectedChannels(selected.map((opt) => opt.value))
+                  }
+                  styles={customStyles}
+                  placeholder="Select channels"
+                  isMulti
+                  closeMenuOnSelect={false}
+                />
               </div>
 
               {/* RCS Configuration Block - Show if RCS is selected */}
@@ -364,27 +415,21 @@ const AddUser = () => {
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                           Bot Name
                         </label>
-                        <div className="relative">
-                          <select
-                            value={rcsConfig.botName}
-                            onChange={(e) =>
-                              setRcsConfig((prev) => ({
-                                ...prev,
-                                botName: e.target.value,
-                              }))
-                            }
-                            className="appearance-none w-full px-4 py-2.5 pr-10 bg-white border-none rounded-xl text-sm text-gray-700 focus:ring-2 focus:ring-pink-500/20 transition-all outline-none cursor-pointer shadow-sm"
-                          >
-                            <option value="">Select bot</option>
-                            <option value="Bot1">Bot 1</option>
-                            <option value="Bot2">Bot 2</option>
-                            <option value="Bot3">Bot 3</option>
-                          </select>
-                          <ChevronDown
-                            size={16}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
-                          />
-                        </div>
+                        <Select
+                          options={botNameOptions}
+                          value={botNameOptions.find(
+                            (opt) => opt.value === rcsConfig.botName,
+                          )}
+                          onChange={(option) =>
+                            setRcsConfig((prev) => ({
+                              ...prev,
+                              botName: option?.value || "",
+                            }))
+                          }
+                          styles={customStyles}
+                          placeholder="Select bot"
+                          isClearable
+                        />
                       </div>
                     </div>
 
@@ -398,26 +443,20 @@ const AddUser = () => {
                             <Info size={16} />
                           </button>
                         </label>
-                        <div className="relative">
-                          <select
-                            value={rcsConfig.creditDeduction}
-                            onChange={(e) =>
-                              setRcsConfig((prev) => ({
-                                ...prev,
-                                creditDeduction: e.target.value,
-                              }))
-                            }
-                            className="appearance-none w-full px-4 py-2.5 pr-10 bg-white border-none rounded-xl text-sm text-gray-700 focus:ring-2 focus:ring-pink-500/20 transition-all outline-none cursor-pointer shadow-sm"
-                          >
-                            <option value="Submission">Submission</option>
-                            <option value="Delivery">Delivery</option>
-                            <option value="Read">Read</option>
-                          </select>
-                          <ChevronDown
-                            size={16}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
-                          />
-                        </div>
+                        <Select
+                          options={creditDeductionOptions}
+                          value={creditDeductionOptions.find(
+                            (opt) => opt.value === rcsConfig.creditDeduction,
+                          )}
+                          onChange={(option) =>
+                            setRcsConfig((prev) => ({
+                              ...prev,
+                              creditDeduction: option?.value || "Submission",
+                            }))
+                          }
+                          styles={customStyles}
+                          placeholder="Select deduction type"
+                        />
                       </div>
                     </div>
                   </div>

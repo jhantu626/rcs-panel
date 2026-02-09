@@ -8,6 +8,7 @@ import {
   ChevronDown,
   Bot,
 } from "lucide-react";
+import { Link } from "react-router";
 
 const Users = () => {
   const [statusFilter, setStatusFilter] = useState("All Status");
@@ -128,10 +129,10 @@ const Users = () => {
             Manage and view all your users
           </p>
         </div>
-        <button className="flex items-center gap-2 bg-gradient-to-r from-pink-500 to-pink-600 text-white px-5 py-2.5 rounded-xl hover:from-pink-600 hover:to-pink-700 transition-all shadow-lg shadow-pink-500/30 hover:shadow-xl hover:shadow-pink-500/40 font-medium">
+        <Link to={"/add-user"} className="flex items-center gap-2 bg-gradient-to-r from-pink-500 to-pink-600 text-white px-5 py-2.5 rounded-xl hover:from-pink-600 hover:to-pink-700 transition-all shadow-lg shadow-pink-500/30 hover:shadow-xl hover:shadow-pink-500/40 font-medium">
           <Plus size={18} />
           <span>Add User</span>
-        </button>
+        </Link>
       </div>
 
       {/* Filters and Search */}
