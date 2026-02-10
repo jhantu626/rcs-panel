@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   LayoutDashboard,
   Users,
@@ -27,6 +27,7 @@ const Sidebar = () => {
   const role = useUser("role") || "USER";
   const billingType = useUser("billingType") || "PREPAID";
   const logout = useAuth("logout");
+  const removeUser = useUser("removeUser");
   const navigate = useNavigate();
 
   const [collapsed, setCollapsed] = useState(false);
@@ -35,36 +36,45 @@ const Sidebar = () => {
 
   const handleLogout = () => {
     logout();
+    removeUser();
     navigate("/login");
   };
 
-  const menuItems = [
-    {
-      icon: Megaphone,
-      label: "Broadcast",
-      path: "/broadcast",
-      children: [
-        { label: "Campaign List", path: "/broadcast/campaign-list" },
-        { label: "Create Campaign", path: "/broadcast/create-campaign" },
-        { label: "Campaign Report", path: "/broadcast/campaign-report" },
-        { label: "Downloads", path: "/broadcast/downloads" },
-      ],
-    },
-    {
-      icon: Share2,
-      label: "Channels",
-      path: "/",
-      children: [
-        { label: "Dashboard", path: "/" },
-        { label: "Report", path: "/report" },
-      ],
-    },
-    { icon: FileText, label: "Templates", path: "/templates" },
-    { icon: Wrench, label: "Utilities", path: "/utilites" },
-    { icon: Download, label: "Downloads", path: "/downloads" },
-    { icon: Users, label: "Audience", path: "/audience" },
-    role === "ADMIN" && { icon: User, label: "User", path: "/users" },
-  ];
+  const menuItems = useMemo(() => {
+    const baseMenu = [
+      {
+        icon: Megaphone,
+        label: "Broadcast",
+        path: "/broadcast",
+        children: [
+          { label: "Campaign List", path: "/broadcast/campaign-list" },
+          { label: "Create Campaign", path: "/broadcast/create-campaign" },
+          { label: "Campaign Report", path: "/broadcast/campaign-report" },
+          { label: "Downloads", path: "/broadcast/downloads" },
+        ],
+      },
+      {
+        icon: Share2,
+        label: "Channels",
+        path: "/",
+        children: [
+          { label: "Dashboard", path: "/" },
+          { label: "Report", path: "/report" },
+        ],
+      },
+      { icon: FileText, label: "Templates", path: "/templates" },
+      { icon: Wrench, label: "Utilities", path: "/utilites" },
+      { icon: Download, label: "Downloads", path: "/downloads" },
+      { icon: Users, label: "Audience", path: "/audience" },
+    ];
+
+    // Add Users menu ONLY for ADMIN
+    if (role === "ADMIN") {
+      baseMenu.push({ icon: User, label: "Users", path: "/users" });
+    }
+
+    return baseMenu;
+  }, [role]);
 
   const toggleSubmenu = (path) => {
     setExpandedMenus((prev) =>
