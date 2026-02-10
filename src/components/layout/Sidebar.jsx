@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   LayoutDashboard,
   Users,
@@ -11,14 +11,12 @@ import {
   Wrench,
   Download,
   User,
-  LogOut,
 } from "lucide-react";
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 import { useUser } from "../../context/UserContext";
-import { useAuth } from "../../context/AuthContext";
 
 const cn = (...inputs) => twMerge(clsx(inputs));
 
@@ -26,19 +24,10 @@ const Sidebar = () => {
   const userName = useUser("userName");
   const role = useUser("role");
   const billingType = useUser("billingType");
-  const navigate = useNavigate();
-  const logout = useAuth("logout");
 
   const [collapsed, setCollapsed] = useState(false);
   const [activePath, setActivePath] = useState("/dashboard");
   const [expandedMenus, setExpandedMenus] = useState(["/dashboard"]);
-
-  const handleLogout = () => {
-    const success = logout();
-    if (success) {
-      navigate("/login");
-    }
-  };
 
   const menuItems = [
     {
@@ -65,7 +54,6 @@ const Sidebar = () => {
     { icon: Wrench, label: "Utilities", path: "/utilites" },
     { icon: Download, label: "Downloads", path: "/downloads" },
     { icon: Users, label: "Audience", path: "/audience" },
-    role === "ADMIN" && { icon: User, label: "Users", path: "/users" },
   ];
 
   const toggleSubmenu = (path) => {
@@ -90,6 +78,13 @@ const Sidebar = () => {
   const isExpanded = (path) => expandedMenus.includes(path);
   const isActive = (path) =>
     activePath === path || activePath.startsWith(path + "/");
+
+
+  useEffect(()=>{
+    if(role === "ADMIN"){
+      menuItems.push({ icon: User, label: "Users", path: "/users" });
+    }
+  },[])
 
   return (
     <aside
@@ -211,44 +206,21 @@ const Sidebar = () => {
       </div>
 
       {/* User Info */}
-      <div className="p-4 border-t border-gray-50">
-        {!collapsed ? (
-          <div className="space-y-2">
-            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
-              <div className="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center text-pink-700 font-bold">
-                {userName.charAt(0).toUpperCase()}
-              </div>
-              <div className="flex flex-col">
-                <span className="text-sm font-semibold text-gray-700">
-                  {userName}
-                </span>
-                <span className="text-xs text-gray-400">{billingType}</span>
-              </div>
+      {!collapsed && (
+        <div className="p-4 border-t border-gray-50">
+          <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+            <div className="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center text-pink-700 font-bold">
+              {userName.charAt(0).toUpperCase()}
             </div>
-            <button
-              onClick={handleLogout}
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-gray-500 hover:bg-red-50 hover:text-red-600 group"
-            >
-              <LogOut
-                size={20}
-                className="shrink-0 transition-colors text-gray-400 group-hover:text-red-600"
-              />
-              <span className="flex-1 text-left font-medium">Logout</span>
-            </button>
+            <div className="flex flex-col">
+              <span className="text-sm font-semibold text-gray-700">
+                {userName}
+              </span>
+              <span className="text-xs text-gray-400">{billingType}</span>
+            </div>
           </div>
-        ) : (
-          <button
-            onClick={handleLogout}
-            className="w-full flex items-center justify-center p-3 rounded-xl transition-all duration-200 text-gray-500 hover:bg-red-50 hover:text-red-600 group relative"
-            title="Logout"
-          >
-            <LogOut
-              size={20}
-              className="shrink-0 transition-colors text-gray-400 group-hover:text-red-600"
-            />
-          </button>
-        )}
-      </div>
+        </div>
+      )}
     </aside>
   );
 };
