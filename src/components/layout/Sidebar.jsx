@@ -63,6 +63,7 @@ const Sidebar = () => {
     { icon: Wrench, label: "Utilities", path: "/utilites" },
     { icon: Download, label: "Downloads", path: "/downloads" },
     { icon: Users, label: "Audience", path: "/audience" },
+    role === "ADMIN" && { icon: User, label: "User", path: "/user" },
   ];
 
   const toggleSubmenu = (path) => {
