@@ -28,12 +28,21 @@ const UserProvider = ({ children }) => {
     }
   };
 
+  const removeUser = async () => {
+    try {
+      localStorage.removeItem("user");
+      setUser(null);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     getUser();
   }, [token]);
 
   return (
-    <UserContext.Provider value={{ user, setUsers }}>
+    <UserContext.Provider value={{ user, setUsers,removeUser }}>
       {children}
     </UserContext.Provider>
   );
