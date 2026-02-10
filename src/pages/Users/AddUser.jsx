@@ -1,78 +1,50 @@
-import React, { useState } from "react";
-import { Eye, EyeOff, Info } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import Select from "react-select";
+import { useUser } from "./../../context/UserContext";
+import { useAuth } from "./../../context/AuthContext";
+import { botService } from "../../services/BotService";
+import { validateEmail } from "../../utils/validations";
+import { toast } from "react-toastify";
 
 const AddUser = () => {
-  // Form state
-  const [formData, setFormData] = useState({
-    resellerName: "promo1", // Pre-filled and read-only
+  const userName = useUser("userName");
+  const userId = useUser("id");
+  const token = useAuth("authToken");
+
+  const [user, setUser] = useState({
+    resellerName: userName,
     userName: "",
     password: "",
     confirmPassword: "",
     accountType: "",
     billingType: "",
     email: "",
-    whiteLabelPanel: false,
-    whiteLabelEmail: false,
+    botName: [],
   });
 
   // Password visibility toggles
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // Reseller-specific state
-  const [selectedChannels, setSelectedChannels] = useState([]);
-
-  // RCS Configuration state
-  const [rcsConfig, setRcsConfig] = useState({
-    apiDomain: "",
-    botName: "",
-    creditDeduction: "Submission",
-  });
-
-  // Available channels
-  const channelOptions = [
-    { value: "RCS", label: "RCS" },
-    { value: "SMS", label: "SMS" },
-    { value: "WhatsApp", label: "WhatsApp" },
-    { value: "Email", label: "Email" },
-  ];
+  const [botOptions, setBotOptions] = useState([]);
 
   // Account type options
   const accountTypeOptions = [
-    { value: "User", label: "User" },
-    { value: "Reseller", label: "Reseller" },
-    { value: "Admin", label: "Admin" },
+    { value: "ADMIN", label: "Admin" },
+    { value: "RESELLER", label: "Reseller" },
+    { value: "USER", label: "User" },
   ];
 
   // Billing type options
   const billingTypeOptions = [
-    { value: "Prepaid", label: "Prepaid" },
-    { value: "Postpaid", label: "Postpaid" },
-  ];
-
-  // Bot name options
-  const botNameOptions = [
-    { value: "Bot1", label: "Bot 1" },
-    { value: "Bot2", label: "Bot 2" },
-    { value: "Bot3", label: "Bot 3" },
-  ];
-
-  // Credit deduction options
-  const creditDeductionOptions = [
-    { value: "Submission", label: "Submission" },
-    { value: "Delivery", label: "Delivery" },
-    { value: "Read", label: "Read" },
+    { value: "PREPAID", label: "Prepaid" },
+    { value: "POSTPAID", label: "Postpaid" },
   ];
 
   // Handle input changes
   const handleInputChange = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  // Handle checkbox changes
-  const handleCheckboxChange = (field) => {
-    setFormData((prev) => ({ ...prev, [field]: !prev[field] }));
+    setUser((prev) => ({ ...prev, [field]: value }));
   };
 
   // Custom styles for react-select
@@ -161,13 +133,35 @@ const AddUser = () => {
   // Check if form is valid (basic check for demo)
   const isFormValid = () => {
     return (
-      formData.userName &&
-      formData.password &&
-      formData.confirmPassword &&
-      formData.accountType &&
-      formData.billingType &&
-      formData.email
+      user.userName &&
+      user.password &&
+      user.confirmPassword &&
+      user.accountType &&
+      user.billingType &&
+      user.email &&
+      user.botName.length > 0
     );
+  };
+
+  const getBotOptions = async () => {
+    try {
+      const opitons = await botService.getAllBots(token);
+      setBotOptions(
+        opitons.map((item) => ({ value: item.id, label: item.botName })),
+      );
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    getBotOptions();
+  }, []);
+
+  const handleAdd = () => {
+    if (validateEmail(user.email)) {
+      toast.error("Invalid Email", {
+        position: "top-center",
+      });
+    }
   };
 
   return (
@@ -191,7 +185,7 @@ const AddUser = () => {
                 </label>
                 <input
                   type="text"
-                  value={formData.resellerName}
+                  value={user.resellerName}
                   disabled
                   className="w-full px-4 py-2.5 bg-gray-100 border-none rounded-xl text-sm text-gray-500 cursor-not-allowed"
                 />
@@ -205,7 +199,7 @@ const AddUser = () => {
                 <div className="relative">
                   <input
                     type={showPassword ? "text" : "password"}
-                    value={formData.password}
+                    value={user.password}
                     onChange={(e) =>
                       handleInputChange("password", e.target.value)
                     }
@@ -230,7 +224,7 @@ const AddUser = () => {
                 <Select
                   options={accountTypeOptions}
                   value={accountTypeOptions.find(
-                    (opt) => opt.value === formData.accountType,
+                    (opt) => opt.value === user.accountType,
                   )}
                   onChange={(option) =>
                     handleInputChange("accountType", option?.value || "")
@@ -238,6 +232,29 @@ const AddUser = () => {
                   styles={customStyles}
                   placeholder="Select User Type"
                   isClearable
+                />
+              </div>
+
+              {/* Bot Name */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Bot Name
+                </label>
+                <Select
+                  options={botOptions}
+                  value={botOptions.filter((opt) =>
+                    user.botName.includes(opt.value),
+                  )}
+                  onChange={(selected) =>
+                    setUser((prev) => ({
+                      ...prev,
+                      botName: selected.map((opt) => opt.value),
+                    }))
+                  }
+                  styles={customStyles}
+                  placeholder="Select bot(s)"
+                  isMulti
+                  closeMenuOnSelect={false}
                 />
               </div>
             </div>
@@ -251,7 +268,7 @@ const AddUser = () => {
                 </label>
                 <input
                   type="text"
-                  value={formData.userName}
+                  value={user.userName}
                   onChange={(e) =>
                     handleInputChange("userName", e.target.value)
                   }
@@ -268,7 +285,7 @@ const AddUser = () => {
                 <div className="relative">
                   <input
                     type={showConfirmPassword ? "text" : "password"}
-                    value={formData.confirmPassword}
+                    value={user.confirmPassword}
                     onChange={(e) =>
                       handleInputChange("confirmPassword", e.target.value)
                     }
@@ -297,7 +314,7 @@ const AddUser = () => {
                 <Select
                   options={billingTypeOptions}
                   value={billingTypeOptions.find(
-                    (opt) => opt.value === formData.billingType,
+                    (opt) => opt.value === user.billingType,
                   )}
                   onChange={(option) =>
                     handleInputChange("billingType", option?.value || "")
@@ -315,7 +332,7 @@ const AddUser = () => {
                 </label>
                 <input
                   type="email"
-                  value={formData.email}
+                  value={user.email}
                   onChange={(e) => handleInputChange("email", e.target.value)}
                   placeholder="Enter email address"
                   className="w-full px-4 py-2.5 bg-gray-50 border-none rounded-xl text-sm focus:ring-2 focus:ring-pink-500/20 focus:bg-white transition-all outline-none placeholder-gray-400 text-gray-700"
@@ -323,147 +340,6 @@ const AddUser = () => {
               </div>
             </div>
           </div>
-
-          {/* Options Section - Checkboxes */}
-          <div className="border-t border-gray-100 pt-6 mb-6">
-            <div className="flex flex-wrap gap-6">
-              {/* White Label Panel Required */}
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={formData.whiteLabelPanel}
-                  onChange={() => handleCheckboxChange("whiteLabelPanel")}
-                  className="w-4 h-4 rounded border-gray-300 text-pink-600 focus:ring-2 focus:ring-pink-500/20 cursor-pointer"
-                />
-                <span className="text-sm font-medium text-gray-700">
-                  White Label Panel Required
-                </span>
-              </label>
-
-              {/* White Label Email Required */}
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={formData.whiteLabelEmail}
-                  onChange={() => handleCheckboxChange("whiteLabelEmail")}
-                  className="w-4 h-4 rounded border-gray-300 text-pink-600 focus:ring-2 focus:ring-pink-500/20 cursor-pointer"
-                />
-                <span className="text-sm font-medium text-gray-700">
-                  White Label Email Required
-                </span>
-              </label>
-            </div>
-          </div>
-
-          {/* Conditional Reseller Section */}
-          {formData.accountType === "Reseller" && (
-            <div className="border-t border-gray-100 pt-6 space-y-6">
-              {/* Channels Multi-Select */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Channels <span className="text-red-500">*</span>
-                </label>
-                <Select
-                  options={channelOptions}
-                  value={channelOptions.filter((opt) =>
-                    selectedChannels.includes(opt.value),
-                  )}
-                  onChange={(selected) =>
-                    setSelectedChannels(selected.map((opt) => opt.value))
-                  }
-                  styles={customStyles}
-                  placeholder="Select channels"
-                  isMulti
-                  closeMenuOnSelect={false}
-                />
-              </div>
-
-              {/* RCS Configuration Block - Show if RCS is selected */}
-              {selectedChannels.includes("RCS") && (
-                <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                    RCS
-                  </h3>
-
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {/* Left Side */}
-                    <div className="space-y-4">
-                      {/* RCS API Domain */}
-                      <div>
-                        <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
-                          RCS API Domain
-                          <button className="text-gray-400 hover:text-gray-600 transition-colors">
-                            <Info size={16} />
-                          </button>
-                        </label>
-                        <input
-                          type="text"
-                          value={rcsConfig.apiDomain}
-                          onChange={(e) =>
-                            setRcsConfig((prev) => ({
-                              ...prev,
-                              apiDomain: e.target.value,
-                            }))
-                          }
-                          placeholder="Enter API domain"
-                          className="w-full px-4 py-2.5 bg-white border-none rounded-xl text-sm focus:ring-2 focus:ring-pink-500/20 transition-all outline-none placeholder-gray-400 text-gray-700 shadow-sm"
-                        />
-                      </div>
-
-                      {/* Bot Name */}
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Bot Name
-                        </label>
-                        <Select
-                          options={botNameOptions}
-                          value={botNameOptions.find(
-                            (opt) => opt.value === rcsConfig.botName,
-                          )}
-                          onChange={(option) =>
-                            setRcsConfig((prev) => ({
-                              ...prev,
-                              botName: option?.value || "",
-                            }))
-                          }
-                          styles={customStyles}
-                          placeholder="Select bot"
-                          isClearable
-                        />
-                      </div>
-                    </div>
-
-                    {/* Right Side */}
-                    <div className="space-y-4">
-                      {/* Credit Deduction */}
-                      <div>
-                        <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
-                          Credit Deduction
-                          <button className="text-gray-400 hover:text-gray-600 transition-colors">
-                            <Info size={16} />
-                          </button>
-                        </label>
-                        <Select
-                          options={creditDeductionOptions}
-                          value={creditDeductionOptions.find(
-                            (opt) => opt.value === rcsConfig.creditDeduction,
-                          )}
-                          onChange={(option) =>
-                            setRcsConfig((prev) => ({
-                              ...prev,
-                              creditDeduction: option?.value || "Submission",
-                            }))
-                          }
-                          styles={customStyles}
-                          placeholder="Select deduction type"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
 
           {/* Add Button - Bottom Right */}
           <div className="flex justify-end mt-8">
@@ -474,6 +350,7 @@ const AddUser = () => {
                   ? "bg-gradient-to-r from-pink-500 to-pink-600 text-white hover:from-pink-600 hover:to-pink-700 shadow-lg shadow-pink-500/30 hover:shadow-xl hover:shadow-pink-500/40 active:scale-[0.98]"
                   : "bg-gray-200 text-gray-400 cursor-not-allowed"
               }`}
+              onClick={handleAdd}
             >
               Add
             </button>
