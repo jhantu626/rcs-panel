@@ -6,6 +6,7 @@ import { useAuth } from "./../../context/AuthContext";
 import { botService } from "../../services/BotService";
 import { validateEmail } from "../../utils/validations";
 import { toast } from "react-toastify";
+import { authService } from "../../services/AuthService";
 
 const AddUser = () => {
   const userName = useUser("userName");
@@ -31,7 +32,6 @@ const AddUser = () => {
 
   // Account type options
   const accountTypeOptions = [
-    { value: "ADMIN", label: "Admin" },
     { value: "RESELLER", label: "Reseller" },
     { value: "USER", label: "User" },
   ];
@@ -156,12 +156,114 @@ const AddUser = () => {
     getBotOptions();
   }, []);
 
-  const handleAdd = () => {
-    if (validateEmail(user.email)) {
+  const handleAdd = async () => {
+    if (!validateEmail(user.email)) {
       toast.error("Invalid Email", {
         position: "top-center",
       });
+      return;
     }
+    if (user.password !== user.confirmPassword) {
+      toast.error("Passwords do not match", {
+        position: "top-center",
+      });
+      return;
+    }
+    if (user.password.length < 6) {
+      toast.error("Password must be at least 6 characters long", {
+        position: "top-center",
+      });
+      return;
+    }
+    if (user.userName.length < 3) {
+      toast.error("Username must be at least 3 characters long", {
+        position: "top-center",
+      });
+      return;
+    }
+    if (user.botName.length === 0) {
+      toast.error("Please select at least one bot", {
+        position: "top-center",
+      });
+      return;
+    }
+    if (user.accountType === "") {
+      toast.error("Please select an account type", {
+        position: "top-center",
+      });
+      return;
+    }
+    if (user.billingType === "") {
+      toast.error("Please select a billing type", {
+        position: "top-center",
+      });
+      return;
+    }
+    if (user.resellerName === "") {
+      toast.error("Please select a reseller name", {
+        position: "top-center",
+      });
+      return;
+    }
+    if (user.userName === "") {
+      toast.error("Please enter a username", {
+        position: "top-center",
+      });
+      return;
+    }
+    if (user.password === "") {
+      toast.error("Please enter a password", {
+        position: "top-center",
+      });
+      return;
+    }
+    if (user.confirmPassword === "") {
+      toast.error("Please enter a confirm password", {
+        position: "top-center",
+      });
+      return;
+    }
+    if (user.email === "") {
+      toast.error("Please enter an email", {
+        position: "top-center",
+      });
+      return;
+    }
+
+    const payload = {
+      userName: user.userName,
+      email: user.email,
+      password: user.password,
+      role: user.accountType,
+      billingType: user.billingType,
+      parentId: userId,
+      bots: user.botName.map((item) => {
+        return {
+          id: item,
+        };
+      }),
+    };
+
+    try {
+      const data = await authService.createUser(token, payload);
+      console.log(data);
+      if (data?.status) {
+        toast.success(data?.message, {
+          position: "top-center",
+        });
+      } else {
+        toast.error(data?.message || "Something went wrong", {
+          position: "top-center",
+        });
+      }
+    } catch (error) {
+      const data = await error.response.data;
+      toast.error(data?.message, {
+        position: "top-center",
+      });
+    }
+
+    console.log("payload", payload);
   };
 
   return (
