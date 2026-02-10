@@ -11,23 +11,32 @@ import {
   Wrench,
   Download,
   User,
+  LogOut,
 } from "lucide-react";
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useUser } from "../../context/UserContext";
+import { useAuth } from "../../context/AuthContext";
 
 const cn = (...inputs) => twMerge(clsx(inputs));
 
 const Sidebar = () => {
-  const userName = useUser("userName");
-  const role = useUser("role");
-  const billingType = useUser("billingType");
+  const userName = useUser("userName") || "USER";
+  const role = useUser("role") || "USER";
+  const billingType = useUser("billingType") || "PREPAID";
+  const logout = useAuth("logout");
+  const navigate = useNavigate();
 
   const [collapsed, setCollapsed] = useState(false);
   const [activePath, setActivePath] = useState("/dashboard");
   const [expandedMenus, setExpandedMenus] = useState(["/dashboard"]);
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   const menuItems = [
     {
@@ -79,12 +88,11 @@ const Sidebar = () => {
   const isActive = (path) =>
     activePath === path || activePath.startsWith(path + "/");
 
-
-  useEffect(()=>{
-    if(role === "ADMIN"){
+  useEffect(() => {
+    if (role === "ADMIN") {
       menuItems.push({ icon: User, label: "Users", path: "/users" });
     }
-  },[])
+  }, []);
 
   return (
     <aside
@@ -202,6 +210,23 @@ const Sidebar = () => {
               </div>
             ))}
           </nav>
+
+          {/* Logout Button */}
+          <div className="mt-4 pt-4 border-t border-gray-100">
+            <button
+              onClick={handleLogout}
+              className={cn(
+                "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group",
+                "text-red-600 hover:bg-red-50 hover:text-red-700",
+                collapsed && "justify-center",
+              )}
+            >
+              <LogOut size={20} className="shrink-0 transition-colors" />
+              {!collapsed && (
+                <span className="flex-1 text-left font-medium">Logout</span>
+              )}
+            </button>
+          </div>
         </div>
       </div>
 
