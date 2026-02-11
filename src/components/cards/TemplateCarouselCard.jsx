@@ -16,13 +16,41 @@ const TemplateCarouselCard = ({ carousel, setCarousel }) => {
         const ch = key === "cardHeight" ? value : item.cardHeight;
 
         if (cw === "Small" && ch === "Short") {
-          return { ...item, [key]: value, imageWidth: 960, imageHeight: 768 };
+          return {
+            ...item,
+            [key]: value,
+            imageWidth: 960,
+            imageHeight: 768,
+            uploadedImage: null,
+            uploadedVideo: null,
+          };
         } else if (cw === "Medium" && ch === "Short") {
-          return { ...item, [key]: value, imageWidth: 1440, imageHeight: 720 };
+          return {
+            ...item,
+            [key]: value,
+            imageWidth: 1440,
+            imageHeight: 720,
+            uploadedImage: null,
+            uploadedVideo: null,
+          };
         } else if (cw === "Medium" && ch === "Medium") {
-          return { ...item, [key]: value, imageWidth: 1440, imageHeight: 1080 };
+          return {
+            ...item,
+            [key]: value,
+            imageWidth: 1440,
+            imageHeight: 1080,
+            uploadedImage: null,
+            uploadedVideo: null,
+          };
         } else if (cw === "Small" && ch === "Medium") {
-          return { ...item, [key]: value, imageWidth: 576, imageHeight: 720 };
+          return {
+            ...item,
+            [key]: value,
+            imageWidth: 576,
+            imageHeight: 720,
+            uploadedImage: null,
+            uploadedVideo: null,
+          };
         }
       }
 
@@ -127,18 +155,31 @@ const TemplateCarouselCard = ({ carousel, setCarousel }) => {
             value={carousel[0].cardHeight}
             update={onUpdateCarouselCard}
           />
-          <CarouselRatioButtonInput
-            title={"Header"}
-            description={"Choose an option below to configure media type"}
-            option1={"Image"}
-            option2={"Video"}
-            fieldKey={"headerType"}
-            value={carousel[0].headerType}
-            update={onUpdateCarouselCard}
-          />
         </>
       )}
-
+      <CarouselRatioButtonInput
+        title={"Header"}
+        description={"Choose an option below to configure media type"}
+        option1={"Image"}
+        option2={"Video"}
+        fieldKey={"headerType"}
+        value={carousel[0].headerType}
+        update={(key, value) => {
+          setCarousel((prev) => {
+            return prev.map((item, index) => {
+              if (index === selectedIndex) {
+                return {
+                  ...item,
+                  [key]: value,
+                  uploadedImage: null,
+                  uploadedVideo: null,
+                };
+              }
+              return item;
+            });
+          });
+        }}
+      />
       {carousel[0].headerType === "Image" && (
         <>
           <FileUploadInput
