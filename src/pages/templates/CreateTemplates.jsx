@@ -262,6 +262,7 @@ const CreateTemplates = () => {
             imageHeight: 480,
             uploadedImage: null,
             videoThumbnail: null,
+            uploadedVideo: null,
             videoThumbnailSize: {
               width: 1440,
               height: 480,
@@ -275,6 +276,7 @@ const CreateTemplates = () => {
             imageHeight: 1024,
             uploadedImage: null,
             videoThumbnail: null,
+            uploadedVideo: null,
             videoThumbnailSize: {
               width: 1000,
               height: 1320,
@@ -294,6 +296,7 @@ const CreateTemplates = () => {
               imageHeight: 480,
               uploadedImage: null,
               videoThumbnail: null,
+              uploadedVideo: null,
               videoThumbnailSize: {
                 width: 1440,
                 height: 480,
@@ -309,6 +312,7 @@ const CreateTemplates = () => {
               imageHeight: 720,
               uploadedImage: null,
               videoThumbnail: null,
+              uploadedVideo: null,
               videoThumbnailSize: {
                 width: 980,
                 height: 420,
