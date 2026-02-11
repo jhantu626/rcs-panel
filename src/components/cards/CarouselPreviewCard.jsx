@@ -2,7 +2,8 @@ import React from "react";
 
 const CarouselPreviewCard = ({ card }) => {
   return (
-    <div className="min-w-full h-full flex-shrink-0 snap-center px-1">
+    // <div className="min-w-full h-full flex-shrink-0 snap-center px-1">
+    <div className="flex-[0_0_100%] h-full snap-center px-1 box-border">
       <div className="w-full max-w-md mx-auto" style={{ aspectRatio: "1/1" }}>
         <div
           className="h-full rounded-xl border border-slate-300 bg-white shadow-lg
@@ -57,7 +58,7 @@ const CarouselPreviewCard = ({ card }) => {
             <p className="text-sm text-gray-500 font-[500] py-4 whitespace-pre-wrap break-words">
               {card.body}
             </p>
-            {card.buttons.map((item, index) => {
+            {card?.buttons.map((item, index) => {
               return (
                 <div
                   key={index}
