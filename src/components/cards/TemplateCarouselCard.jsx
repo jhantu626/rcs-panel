@@ -3,7 +3,6 @@ import CarouselRatioButtonInput from "../inputs/CarouselRatioButtonInput";
 import FileUploadInput from "../inputs/FileUploadInput";
 import { toast } from "react-toastify";
 import ButtonNormalnput from "../inputs/ButtonNormalnput";
-import { title } from "framer-motion/client";
 import AddBtnCard from "./AddBtnCard";
 import { Phone, Plus } from "lucide-react";
 
@@ -290,7 +289,7 @@ const TemplateCarouselCard = ({ carousel, setCarousel }) => {
                         }),
                       };
                     }
-                    return prev;
+                    return item;
                   }),
                 );
               }}
