@@ -4,7 +4,7 @@ import FileUploadInput from "../inputs/FileUploadInput";
 import { toast } from "react-toastify";
 import ButtonNormalnput from "../inputs/ButtonNormalnput";
 import AddBtnCard from "./AddBtnCard";
-import { Phone, Plus } from "lucide-react";
+import { Phone, Plus, X } from "lucide-react";
 
 const TemplateCarouselCard = ({ carousel, setCarousel }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -34,6 +34,12 @@ const TemplateCarouselCard = ({ carousel, setCarousel }) => {
 
   return (
     <>
+      <div>
+        <p className="text-sm text-gray-500 font-[500]">Cards</p>
+        <p className="text-sm text-gray-500 font-[500]">
+          A carousel can have a minimum of 2 cards and a maximum 10 cards.
+        </p>
+      </div>
       <div className="flex flex-row gap-2 flex-wrap mb-4">
         {carousel.map((_, index) => {
           const isSelected = selectedIndex === index;
@@ -41,13 +47,35 @@ const TemplateCarouselCard = ({ carousel, setCarousel }) => {
             <div
               key={index}
               onClick={() => setSelectedIndex(index)}
-              className={`flex flex-row gap-1 flex-wrap w-fit px-3 py-2 rounded-lg border-2 cursor-pointer transition-all duration-200 ${
+              className={`relative group flex flex-row gap-1 flex-wrap w-fit px-3 py-2 rounded-lg border-2 cursor-pointer transition-all duration-200 ${
                 isSelected
                   ? "bg-pink-600 border-pink-600 text-white"
                   : "bg-gray-100 border-gray-200 hover:border-pink-300 hover:bg-gray-50"
               }`}
             >
               <p className="text-sm font-semibold">Card {index + 1}</p>
+              {carousel.length > 2 && (
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    const newCarousel = carousel.filter((_, i) => i !== index);
+                    setCarousel(newCarousel);
+                    if (selectedIndex === index) {
+                      setSelectedIndex(Math.max(0, index - 1));
+                    } else if (selectedIndex > index) {
+                      setSelectedIndex(selectedIndex - 1);
+                    }
+                  }}
+                  className={`absolute -top-2 -right-2 p-0.5 rounded-full shadow-sm border border-gray-200 transition-all z-10 
+                    opacity-0 group-hover:opacity-100 ${
+                      isSelected
+                        ? "bg-white hover:bg-gray-50 text-gray-400 hover:text-red-500"
+                        : "bg-white hover:bg-gray-50 text-gray-400 hover:text-red-500"
+                    }`}
+                >
+                  <X size={12} strokeWidth={3} />
+                </div>
+              )}
             </div>
           );
         })}
