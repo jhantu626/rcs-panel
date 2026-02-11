@@ -4,8 +4,7 @@ import { MainLoaders } from "../components";
 
 const ProtectedRoute = () => {
   const authToken = useAuth("authToken");
-  // const isLoading = useAuth("loading");
-  const isLoading = true;
+  const isLoading = useAuth("loading");
 
   if (isLoading) {
     return <MainLoaders />;
