@@ -171,7 +171,7 @@ const TemplateCarouselCard = ({ carousel, setCarousel }) => {
         option1={"Image"}
         option2={"Video"}
         fieldKey={"headerType"}
-        value={carousel[0].headerType}
+        value={carousel[selectedIndex].headerType}
         update={(key, value) => {
           setCarousel((prev) => {
             return prev.map((item, index) => {
