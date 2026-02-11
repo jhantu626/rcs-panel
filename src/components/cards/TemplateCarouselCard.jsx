@@ -383,6 +383,10 @@ const TemplateCarouselCard = ({ carousel, setCarousel }) => {
             onClick={() => {
               setCarousel((prev) =>
                 prev.map((item, index) => {
+                  if(item.buttons.length >= 4){
+                    toast.error("Cannot add more than 4 buttons");
+                    return item;
+                  }
                   if (index === selectedIndex) {
                     return {
                       ...item,
