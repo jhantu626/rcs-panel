@@ -23,6 +23,7 @@ const TemplateCarouselCard = ({ carousel, setCarousel }) => {
             imageHeight: 768,
             uploadedImage: null,
             uploadedVideo: null,
+            videoThumbnail: null,
           };
         } else if (cw === "Medium" && ch === "Short") {
           return {
@@ -32,6 +33,7 @@ const TemplateCarouselCard = ({ carousel, setCarousel }) => {
             imageHeight: 720,
             uploadedImage: null,
             uploadedVideo: null,
+            videoThumbnail: null,
           };
         } else if (cw === "Medium" && ch === "Medium") {
           return {
@@ -41,6 +43,7 @@ const TemplateCarouselCard = ({ carousel, setCarousel }) => {
             imageHeight: 1080,
             uploadedImage: null,
             uploadedVideo: null,
+            videoThumbnail: null,
           };
         } else if (cw === "Small" && ch === "Medium") {
           return {
@@ -50,6 +53,7 @@ const TemplateCarouselCard = ({ carousel, setCarousel }) => {
             imageHeight: 720,
             uploadedImage: null,
             uploadedVideo: null,
+            videoThumbnail: null,
           };
         }
       }
@@ -383,7 +387,7 @@ const TemplateCarouselCard = ({ carousel, setCarousel }) => {
             onClick={() => {
               setCarousel((prev) =>
                 prev.map((item, index) => {
-                  if(item.buttons.length >= 4){
+                  if (item.buttons.length >= 4) {
                     toast.error("Cannot add more than 4 buttons");
                     return item;
                   }

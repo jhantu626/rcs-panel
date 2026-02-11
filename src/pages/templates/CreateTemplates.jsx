@@ -156,10 +156,6 @@ const CreateTemplates = () => {
       uploadedImage: null,
       uploadedVideo: null,
       videoThumbnail: null,
-      videoThumbnailSize: {
-        width: 960,
-        height: 768,
-      },
       title: "",
       body: "",
       buttons: [],
@@ -173,10 +169,6 @@ const CreateTemplates = () => {
       uploadedImage: null,
       uploadedVideo: null,
       videoThumbnail: null,
-      videoThumbnailSize: {
-        width: 960,
-        height: 768,
-      },
       title: "",
       body: "",
       buttons: [],
