@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Select from "react-select";
 import { validateName } from "../../utils/validations";
 import AddBtnCard from "../../components/cards/AddBtnCard";
-import { Phone } from "lucide-react";
+import { Phone, ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "react-toastify";
 import "react-date-range/dist/styles.css";
 import CarouselRatioButtonInput from "../../components/inputs/CarouselRatioButtonInput";
@@ -10,6 +10,7 @@ import TemplateStandardCard from "../../components/cards/TemplateStandardCard";
 import TemplateRichCard from "../../components/cards/TemplateRichCard";
 import { body } from "framer-motion/client";
 import TemplateCarouselCard from "../../components/cards/TemplateCarouselCard";
+import CarouselPreviewCard from "../../components/cards/CarouselPreviewCard";
 
 const options = [
   { value: "chocolate", label: "Chocolate" },
@@ -104,6 +105,18 @@ const customSelectStyles = {
 };
 
 const CreateTemplates = () => {
+  const scrollRef = useRef(null);
+
+  const scroll = (direction) => {
+    if (scrollRef.current) {
+      const scrollAmount = 300;
+      scrollRef.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
+
   //STATE VARIABLES
   const [templateName, setTemplateName] = useState("");
   const [selectedTemplateType, setSelectedTemplateType] = useState(
@@ -744,6 +757,33 @@ const CreateTemplates = () => {
                   </>
                 )}
               </>
+            )}
+
+            {selectedTemplateType.value === "carousel" && (
+              <div className="relative w-full h-full flex items-center group">
+                <button
+                  onClick={() => scroll("left")}
+                  className="absolute left-2 z-10 p-2 bg-white/80 rounded-full shadow-md hover:bg-white transition-all opacity-0 group-hover:opacity-100 disabled:opacity-0"
+                >
+                  <ChevronLeft size={20} className="text-slate-600" />
+                </button>
+
+                <div
+                  ref={scrollRef}
+                  className="flex w-full h-full overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4 px-1 [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-200 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-slate-300"
+                >
+                  {carousel.map((item, index) => {
+                    return <CarouselPreviewCard card={item} />;
+                  })}
+                </div>
+
+                <button
+                  onClick={() => scroll("right")}
+                  className="absolute right-2 z-10 p-2 bg-white/80 rounded-full shadow-md hover:bg-white transition-all opacity-0 group-hover:opacity-100"
+                >
+                  <ChevronRight size={20} className="text-slate-600" />
+                </button>
+              </div>
             )}
           </div>
         </div>
