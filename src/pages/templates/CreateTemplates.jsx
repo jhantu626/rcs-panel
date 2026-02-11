@@ -581,23 +581,17 @@ const CreateTemplates = () => {
                           className="relative bg-slate-200 flex-shrink-0"
                           style={{ width: "40%", height: "100%" }}
                         >
-                          {(
-                            richCard.headerType === "Image"
-                              ? richCard.uploadedImage
-                              : richCard.videoThumbnail
-                          ) ? (
+                          {richCard.uploadedImage ? (
                             <img
                               className="w-full h-full"
-                              src={
-                                richCard.headerType === "Image"
-                                  ? URL.createObjectURL(richCard.uploadedImage)
-                                  : richCard.videoThumbnail
-                                    ? URL.createObjectURL(
-                                        richCard.videoThumbnail,
-                                      )
-                                    : ""
-                              }
+                              src={URL.createObjectURL(richCard.uploadedImage)}
                               alt=""
+                            />
+                          ) : richCard.uploadedVideo ? (
+                            <video
+                              className="w-full h-full object-cover"
+                              src={URL.createObjectURL(richCard.uploadedVideo)}
+                              controls
                             />
                           ) : (
                             <div className="absolute inset-0 flex items-center justify-center">
@@ -681,21 +675,34 @@ const CreateTemplates = () => {
                           {(
                             richCard.headerType === "Image"
                               ? richCard.uploadedImage
-                              : richCard.videoThumbnail
+                              : richCard.uploadedVideo ||
+                                richCard.videoThumbnail
                           ) ? (
-                            <img
-                              className="w-full h-full"
-                              src={
-                                richCard.headerType === "Image"
-                                  ? URL.createObjectURL(richCard.uploadedImage)
-                                  : richCard.videoThumbnail
-                                    ? URL.createObjectURL(
-                                        richCard.videoThumbnail,
-                                      )
-                                    : ""
-                              }
-                              alt=""
-                            />
+                            richCard.headerType === "Image" ? (
+                              <img
+                                className="w-full h-full object-cover"
+                                src={URL.createObjectURL(
+                                  richCard.uploadedImage,
+                                )}
+                                alt=""
+                              />
+                            ) : richCard.uploadedVideo ? (
+                              <video
+                                className="w-full h-full object-cover"
+                                src={URL.createObjectURL(
+                                  richCard.uploadedVideo,
+                                )}
+                                controls
+                              />
+                            ) : (
+                              <img
+                                className="w-full h-full object-cover"
+                                src={URL.createObjectURL(
+                                  richCard.videoThumbnail,
+                                )}
+                                alt=""
+                              />
+                            )
                           ) : (
                             <div className="absolute inset-0 flex items-center justify-center">
                               <div className="text-center">
