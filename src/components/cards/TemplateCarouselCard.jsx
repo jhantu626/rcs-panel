@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import ButtonNormalnput from "../inputs/ButtonNormalnput";
 import { title } from "framer-motion/client";
 import AddBtnCard from "./AddBtnCard";
-import { Phone } from "lucide-react";
+import { Phone, Plus } from "lucide-react";
 
 const TemplateCarouselCard = ({ carousel, setCarousel }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -52,6 +52,31 @@ const TemplateCarouselCard = ({ carousel, setCarousel }) => {
             </div>
           );
         })}
+        <div
+          key={"add"}
+          onClick={() => {
+            setCarousel((prev) => [
+              ...prev,
+              {
+                cardWidth: carousel[0]?.cardWidth,
+                cardHeight: carousel[0]?.cardHeight,
+                headerType: carousel[0]?.headerType,
+                imageWidth: carousel[0]?.imageWidth,
+                imageHeight: carousel[0]?.imageHeight,
+                uploadedImage: null,
+                title: "",
+                body: "",
+                buttons: [],
+              },
+            ]);
+          }}
+          className={`flex flex-row gap-1 flex-wrap w-fit px-3 py-2 rounded-lg border-2 cursor-pointer transition-all
+             duration-200 bg-gray-100 border-gray-200 hover:border-pink-300 hover:bg-gray-50
+              justify-center items-center`}
+        >
+          <Plus size={16} />
+          <span className="text-sm font-semibold">Add</span>
+        </div>
       </div>
       {selectedIndex === 0 && (
         <>
@@ -251,19 +276,23 @@ const TemplateCarouselCard = ({ carousel, setCarousel }) => {
               latitude={btn.latitude}
               longitude={btn.longitude}
               onClose={() => {}}
-              onUpdate={(index,key,value)=>{
-                setCarousel((prev)=>prev.map((item,i)=>{
-
-                  if(i===selectedIndex){
-                    return {...item,buttons:item.buttons.map((btn,j)=>{
-                      if(j===index){
-                        return {...btn,[key]:value}
-                      }
-                      return btn;
-                    })}
-                  }
-                  return prev;
-                }))
+              onUpdate={(index, key, value) => {
+                setCarousel((prev) =>
+                  prev.map((item, i) => {
+                    if (i === selectedIndex) {
+                      return {
+                        ...item,
+                        buttons: item.buttons.map((btn, j) => {
+                          if (j === index) {
+                            return { ...btn, [key]: value };
+                          }
+                          return btn;
+                        }),
+                      };
+                    }
+                    return prev;
+                  }),
+                );
               }}
               query={btn.query}
               endDate={btn.endDate}
