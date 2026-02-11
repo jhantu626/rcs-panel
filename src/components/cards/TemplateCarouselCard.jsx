@@ -188,12 +188,12 @@ const TemplateCarouselCard = ({ carousel, setCarousel }) => {
           });
         }}
       />
-      {carousel[0].headerType === "Image" && (
+      {carousel[selectedIndex].headerType === "Image" && (
         <>
           <FileUploadInput
             label="Upload Image"
             subtitle={`The image you specify must have a max file size of 1 MB,
-             have a resolution of ${carousel[0].imageWidth} x ${carousel[0].imageHeight} pixels and should be a JPEG, JPG, PNG , GIF.`}
+             have a resolution of ${carousel[selectedIndex].imageWidth} x ${carousel[selectedIndex].imageHeight} pixels and should be a JPEG, JPG, PNG , GIF.`}
             accept=".jpeg,.jpg,.png,.gif"
             fileName={carousel[selectedIndex].uploadedImage?.name}
             onChange={(file) => {
@@ -222,6 +222,85 @@ const TemplateCarouselCard = ({ carousel, setCarousel }) => {
                 }
               };
 
+              image.src = URL.createObjectURL(file);
+            }}
+          />
+        </>
+      )}
+
+      {carousel[selectedIndex].headerType === "Video" && (
+        <>
+          <FileUploadInput
+            label="Upload Video"
+            subtitle={`The video you specify must have a max file size of 5 MB, have a resolution of ${carousel[selectedIndex].imageWidth} x ${carousel[selectedIndex].imageHeight} pixels and should be a MP4.`}
+            accept=".mp4"
+            fileName={carousel[selectedIndex].uploadedVideo?.name}
+            onChange={(file) => {
+              let video = document.createElement("video");
+              video.addEventListener("loadedmetadata", () => {
+                if (
+                  video.videoWidth !== carousel[selectedIndex].imageWidth ||
+                  video.videoHeight !== carousel[selectedIndex].imageHeight
+                ) {
+                  toast.error(
+                    "Video resolution is not matching. Required: " +
+                      carousel[selectedIndex].imageWidth +
+                      " x " +
+                      carousel[selectedIndex].imageHeight +
+                      ", Got: " +
+                      video.videoWidth +
+                      " x " +
+                      video.videoHeight,
+                  );
+                  return;
+                } else {
+                  setCarousel((prev) =>
+                    prev.map((item, index) => {
+                      if (index === selectedIndex) {
+                        return { ...item, uploadedVideo: file };
+                      }
+                      return item;
+                    }),
+                  );
+                }
+              });
+              video.src = URL.createObjectURL(file);
+            }}
+          />
+          <FileUploadInput
+            label="Upload Thumbnail"
+            subtitle={`The thumbnail you specify must have a max file size of 1 MB, have a resolution of ${carousel[selectedIndex].imageWidth} x ${carousel[selectedIndex].imageHeight} pixels and should be a JPEG, JPG, PNG , GIF.`}
+            accept=".jpeg,.jpg,.png,.gif"
+            fileName={carousel[selectedIndex].videoThumbnail?.name}
+            onChange={(file) => {
+              let image = new Image();
+              image.onload = () => {
+                if (
+                  image.width !== carousel[selectedIndex].imageWidth ||
+                  image.height !== carousel[selectedIndex].imageHeight
+                ) {
+                  toast.error(
+                    "Image resolution is not matching. Required: " +
+                      carousel[selectedIndex].imageWidth +
+                      " x " +
+                      carousel[selectedIndex].imageHeight +
+                      ", Got: " +
+                      image.width +
+                      " x " +
+                      image.height,
+                  );
+                  return;
+                } else {
+                  setCarousel((prev) =>
+                    prev.map((item, index) => {
+                      if (index === selectedIndex) {
+                        return { ...item, videoThumbnail: file };
+                      }
+                      return item;
+                    }),
+                  );
+                }
+              };
               image.src = URL.createObjectURL(file);
             }}
           />
