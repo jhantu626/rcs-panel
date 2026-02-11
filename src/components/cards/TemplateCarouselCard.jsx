@@ -251,23 +251,19 @@ const TemplateCarouselCard = ({ carousel, setCarousel }) => {
               latitude={btn.latitude}
               longitude={btn.longitude}
               onClose={() => {}}
-              onUpdate={(updatedBtn) => {
-                setCarousel((prev) =>
-                  prev.map((item, index) => {
-                    if (index === selectedIndex) {
-                      return {
-                        ...item,
-                        buttons: item.buttons.map((btn, btnIndex) => {
-                          if (btnIndex === index) {
-                            return updatedBtn;
-                          }
-                          return btn;
-                        }),
-                      };
-                    }
-                    return item;
-                  }),
-                );
+              onUpdate={(index,key,value)=>{
+                setCarousel((prev)=>prev.map((item,i)=>{
+
+                  if(i===selectedIndex){
+                    return {...item,buttons:item.buttons.map((btn,j)=>{
+                      if(j===index){
+                        return {...btn,[key]:value}
+                      }
+                      return btn;
+                    })}
+                  }
+                  return prev;
+                }))
               }}
               query={btn.query}
               endDate={btn.endDate}
