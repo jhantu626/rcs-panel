@@ -1,12 +1,14 @@
 import { Navigate, Outlet } from "react-router";
 import { useAuth } from "../context/AuthContext";
+import { MainLoaders } from "../components";
 
 const ProtectedRoute = () => {
   const authToken = useAuth("authToken");
-  const isLoading = useAuth("loading");
+  // const isLoading = useAuth("loading");
+  const isLoading = true;
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <MainLoaders />;
   }
 
   if (!authToken) {
