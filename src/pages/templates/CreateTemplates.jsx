@@ -9,6 +9,7 @@ import CarouselRatioButtonInput from "../../components/inputs/CarouselRatioButto
 import TemplateStandardCard from "../../components/cards/TemplateStandardCard";
 import TemplateRichCard from "../../components/cards/TemplateRichCard";
 import { body } from "framer-motion/client";
+import TemplateCarouselCard from "../../components/cards/TemplateCarouselCard";
 
 const options = [
   { value: "chocolate", label: "Chocolate" },
@@ -106,7 +107,7 @@ const CreateTemplates = () => {
   //STATE VARIABLES
   const [templateName, setTemplateName] = useState("");
   const [selectedTemplateType, setSelectedTemplateType] = useState(
-    templateTypeOptions[1],
+    templateTypeOptions[2],
   );
 
   // FOR STANDARD CARCD
@@ -131,6 +132,31 @@ const CreateTemplates = () => {
     },
     buttons: [],
   });
+
+  const [carousel, setCarousel] = useState([
+    {
+      cardWidth: "Small",
+      cardHeight: "Short",
+      headerType: "Image",
+      imageWidth: 960,
+      imageHeight: 768,
+      uploadedImage: null,
+      title: "",
+      body: "",
+      buttons: [],
+    },
+    {
+      cardWidth: "Small",
+      cardHeight: "Short",
+      headerType: "Image",
+      imageWidth: 960,
+      imageHeight: 768,
+      uploadedImage: null,
+      title: "",
+      body: "",
+      buttons: [],
+    },
+  ]);
 
   // ADD NEW BUTTONS IN RICH CARD BUTTON
   const addRichCardButton = () => {
@@ -307,8 +333,10 @@ const CreateTemplates = () => {
     if (selectedTemplateType.value === "standard") {
       console.log(standardBody);
       console.log(standardActionButtons);
-    }else if (selectedTemplateType.value === "rich") {
+    } else if (selectedTemplateType.value === "rich") {
       console.log(richCard);
+    } else {
+      console.log(carousel);
     }
   };
 
@@ -471,6 +499,13 @@ const CreateTemplates = () => {
                 removeButtons={removeRichCardButton}
                 updateBtnContent={updateRichCardButtonContent}
                 updateContent={updateRichCardContent}
+              />
+            )}
+
+            {selectedTemplateType.value === "carousel" && (
+              <TemplateCarouselCard
+                carousel={carousel}
+                setCarousel={setCarousel}
               />
             )}
 
