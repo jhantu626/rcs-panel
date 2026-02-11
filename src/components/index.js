@@ -6,5 +6,9 @@ import ScheduleMeeting from "./cards/ScheduleMeeting";
 import AddBtnCard from "./cards/AddBtnCard";
 
 
+// Loaders
+import MainLoaders from "./loaders/MainLoaders";
 
-export {CampaignList, UserList, ScheduleMeeting, AddBtnCard}
+
+
+export {CampaignList, UserList, ScheduleMeeting, AddBtnCard, MainLoaders}
