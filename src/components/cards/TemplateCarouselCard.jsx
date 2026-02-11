@@ -110,6 +110,10 @@ const TemplateCarouselCard = ({ carousel, setCarousel }) => {
         <div
           key={"add"}
           onClick={() => {
+            if (carousel.length >= 10) {
+              toast.error("Cannot add more than 10 cards");
+              return;
+            }
             setCarousel((prev) => [
               ...prev,
               {
